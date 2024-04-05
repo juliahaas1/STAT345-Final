@@ -24,6 +24,7 @@ from sophie
 ```
 
 ## Section Three
+did it work
 
 ```{r student3}
 
