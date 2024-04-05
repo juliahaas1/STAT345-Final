@@ -8,7 +8,7 @@ date: "2023-03-31"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-sophie
+sophie, tessa, julia, eva
 ## Section One
 
 ```{r student1}
@@ -33,43 +33,4 @@ sophie
 
 ```{r student4}
 
-=======
----
-title: "Super Awesome Project Template"
-output: word_document
-date: "2023-03-31"
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-Hello!!  
-Tessa. 
-
-## Section One
-
-```{r student1}
-
-```
-
-
-## Section Two
-
-```{r student2}
-
-```
-
-## Section Three
-
-```{r student3}
-
-```
-
-
-## Section Four
-
-```{r student4}
-
->>>>>>> 951fc596fd04b209976bf1dfc7dc76c490ffa5d4
 ```
