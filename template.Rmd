@@ -9,6 +9,7 @@ date: "2023-03-31"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 sophie, tessa, julia, eva
+from sophie 
 ## Section One
 
 ```{r student1}
