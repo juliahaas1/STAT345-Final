@@ -12,6 +12,13 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Section One Julia
 
 ```{r student1}
+library(rvest)
+country_url <- "https://en.wikipedia.org/wiki/List_of_Billboard_number-one_country_songs_of_2023"
+html <- read_html(country_url)
+cast <- html_nodes(html, "td:nth-child(3) .fn a , th+ td > a")
+
+html_text(cast, trim = TRUE)
+
 
 ```
 
