@@ -9,20 +9,20 @@ date: "2023-03-31"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Section One
+## Section One Julia
 
 ```{r student1}
 
 ```
 
 
-## Section Two
+## Section Two Tessa
 
 ```{r student2}
 
 ```
 
-## Section Three
+## Section Three Eva
 
 https://en.wikipedia.org/wiki/List_of_Billboard_number-one_country_songs_of_2023
 ```{r student3}
@@ -30,7 +30,7 @@ https://en.wikipedia.org/wiki/List_of_Billboard_number-one_country_songs_of_2023
 ```
 
 
-## Section Four
+## Section Four Sophie 
 
 ```{r student4}
 
