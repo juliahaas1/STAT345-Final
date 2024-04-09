@@ -8,8 +8,7 @@ date: "2023-03-31"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-sophie, tessa, julia, eva
-from sophie 
+
 ## Section One
 
 ```{r student1}
@@ -24,7 +23,7 @@ from sophie
 ```
 
 ## Section Three
-did it work
+
 
 ```{r student3}
 
@@ -32,7 +31,6 @@ did it work
 
 
 ## Section Four
-eva hi eva and tessa
 
 ```{r student4}
 
