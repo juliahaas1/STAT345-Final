@@ -24,7 +24,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Section Three Eva
 
-https://en.wikipedia.org/wiki/List_of_Billboard_number-one_country_songs_of_2023
 ```{r student3}
 
 ```
