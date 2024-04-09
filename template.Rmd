@@ -39,5 +39,16 @@ html_text(cast, trim = TRUE)
 ## Section Four Sophie 
 
 ```{r student4}
+urlfunction <- function(year) {
+country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Billboard_number-one_country_songs_of_",  year)
+html <- read_html(country_url)
+cast <- html_nodes(html, "td:nth-child(3) .fn a , th+ td > a")
+
+html_text(cast, trim = TRUE) 
+}
+
+for (i in 1958:2023) {
+  urlfunction(i)
+}
 
 ```
