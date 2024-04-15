@@ -20,8 +20,7 @@ cast <- html_nodes(html, "td:nth-child(3) .fn a , th+ td > a")
 html_text(cast, trim = TRUE)
 
 
-```
-
+``` 
 
 ## Section Two Tessa
 
@@ -125,6 +124,8 @@ html <- read_html(country_url)
 cast <- html_nodes(html, "td:nth-child(3) .fn a , th+ td > a")
 
 html_text(cast, trim = TRUE) 
+
+
 }
 
 for (i in 1958:2023) {
