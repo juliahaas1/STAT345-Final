@@ -30,7 +30,7 @@ html_text(cast, trim = TRUE)
 ```
 
 ## Section Three Eva
-
+hello
 ```{r student3}
 library(rvest)
 # 1958, 2012-2023
@@ -41,11 +41,13 @@ urlfunction1 <- function(year) {
 country_url <- paste0(url1, year)
 html <- read_html(country_url)
 cast <- html_nodes(html, "td:nth-child(3) .fn a , th+ td > a")
-
-html_text(cast, trim = TRUE) 
+html_text(cast, trim = TRUE)
+tables <- html_table(html, fill = TRUE, header = TRUE)
+desired_table <- tables[[1]]
+return(desired_table)
 }
 for (i in url1_years) {
-  urlfunction1(i)
+  urlfunction1(i) 
 }
 
 # 1959-1961
@@ -56,8 +58,10 @@ urlfunction2 <- function(year) {
 country_url <- paste0(url2, year)
 html <- read_html(country_url)
 cast <- html_nodes(html, ".jquery-tablesorter span a , .jquery-tablesorter th a")
-
 html_text(cast, trim = TRUE) 
+tables <- html_table(html, fill = TRUE, header = TRUE)
+desired_table <- tables[[1]]
+return(desired_table)
 }
 for (i in url2_years) {
   urlfunction2(i)
@@ -71,8 +75,10 @@ urlfunction3 <- function(year) {
 country_url <- paste0(url3, year)
 html <- read_html(country_url)
 cast <- html_nodes(html, ".fn a , td > a")
-
-html_text(cast, trim = TRUE) 
+html_text(cast, trim = TRUE)
+tables <- html_table(html, fill = TRUE, header = TRUE)
+desired_table <- tables[[1]]
+return(desired_table)
 }
 for (i in url3_years) {
   urlfunction3(i)
@@ -86,8 +92,10 @@ urlfunction4 <- function(year) {
 country_url <- paste0(url4, year)
 html <- read_html(country_url)
 cast <- html_nodes(html, ".jquery-tablesorter th+ td a , .jquery-tablesorter th a")
-
 html_text(cast, trim = TRUE) 
+tables <- html_table(html, fill = TRUE, header = TRUE)
+desired_table <- tables[[1]]
+return(desired_table)
 }
 for (i in url4_years) {
   urlfunction4(i)
@@ -98,11 +106,13 @@ url5_years <- c(2005:2011)
 url5 <- "https://en.wikipedia.org/wiki/List_of_Hot_Country_Songs_number_ones_of_"
 
 urlfunction5 <- function(year) {
-  country_url <- paste0(url5, year)
+country_url <- paste0(url5, year)
 html <- read_html(country_url)
 cast <- html_nodes(html, ".jquery-tablesorter th+ td a , .jquery-tablesorter th a")
-
 html_text(cast, trim = TRUE) 
+tables <- html_table(html, fill = TRUE, header = TRUE)
+desired_table <- tables[[1]]
+return(desired_table)
 }
 for (i in url5_years) {
   urlfunction5(i)
