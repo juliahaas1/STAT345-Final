@@ -124,12 +124,10 @@ country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Billboard_number-on
 html <- read_html(country_url)
 cast <- html_nodes(html, "td:nth-child(3) .fn a , th+ td > a")
 html_text(cast, trim = TRUE) 
-tables <- html_table(html, fill = TRUE)
-
-# Find the table you want (you might need to inspect the HTML structure of the page)
-# For example, to get the first table on the page:
+tables <- html_table(html, fill = TRUE, header = TRUE)
 desired_table <- tables[[1]]
 return(desired_table)
+
 }
 abcd <- urlfunction1(2012)
 for (i in url1_years) {
