@@ -32,13 +32,13 @@ html_text(cast, trim = TRUE)
 ## Section Three Eva
 
 ```{r student3}
-
+library(rvest)
 # 1958, 2012-2023
 url1_years <- c(1958, 2012:2023)
 url1 <- "https://en.wikipedia.org/wiki/List_of_Billboard_number-one_country_songs_of_"
 
 urlfunction1 <- function(year) {
-country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Billboard_number-one_country_songs_of_",  year)
+country_url <- paste0(url1, year)
 html <- read_html(country_url)
 cast <- html_nodes(html, "td:nth-child(3) .fn a , th+ td > a")
 
@@ -53,7 +53,7 @@ url2_years <- c(1959:1961)
 url2 <- "https://en.wikipedia.org/wiki/List_of_Hot_C%26W_Sides_number_ones_of_"
 
 urlfunction2 <- function(year) {
-country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Hot_C%26W_Sides_number_ones_of_",  year)
+country_url <- paste0(url2, year)
 html <- read_html(country_url)
 cast <- html_nodes(html, ".jquery-tablesorter span a , .jquery-tablesorter th a")
 
@@ -68,7 +68,7 @@ url3_years <- c(1962:1989)
 url3 <- "https://en.wikipedia.org/wiki/List_of_Hot_Country_Singles_number_ones_of_"
 
 urlfunction3 <- function(year) {
-country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Hot_Country_Singles_number_ones_of_",  year)
+country_url <- paste0(url3, year)
 html <- read_html(country_url)
 cast <- html_nodes(html, ".fn a , td > a")
 
@@ -83,7 +83,7 @@ url4_years <- c(1990:2004)
 url4 <- "https://en.wikipedia.org/wiki/List_of_Hot_Country_Singles_%26_Tracks_number_ones_of_"
 
 urlfunction4 <- function(year) {
-country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Hot_Country_Singles_%26_Tracks_number_ones_of_",  year)
+country_url <- paste0(url4, year)
 html <- read_html(country_url)
 cast <- html_nodes(html, ".jquery-tablesorter th+ td a , .jquery-tablesorter th a")
 
@@ -98,7 +98,7 @@ url5_years <- c(2005:2011)
 url5 <- "https://en.wikipedia.org/wiki/List_of_Hot_Country_Songs_number_ones_of_"
 
 urlfunction5 <- function(year) {
-country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Hot_Country_Songs_number_ones_of_",  year)
+  country_url <- paste0(url5, year)
 html <- read_html(country_url)
 cast <- html_nodes(html, ".jquery-tablesorter th+ td a , .jquery-tablesorter th a")
 
@@ -108,6 +108,11 @@ for (i in url5_years) {
   urlfunction5(i)
 }
 
+
+```
+
+```{r}
+urlfunction1(2012)
 ```
 
 
