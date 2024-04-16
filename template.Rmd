@@ -121,9 +121,6 @@ for (i in url5_years) {
 
 ```
 
-```{r}
-urlfunction1(2012)
-```
 
 
 ## Section Four Sophie 
