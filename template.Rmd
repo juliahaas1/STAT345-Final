@@ -44,7 +44,7 @@ for (i in 1958:2023) {
 ## Section Two Tessa
 
 ```{r student2}
-
+x <- "does it work"
 ```
 
 ## Section Three Eva
