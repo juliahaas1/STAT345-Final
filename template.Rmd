@@ -70,7 +70,11 @@ for (i in 1958:2023) {
 ## Section Two Tessa
 
 ```{r student2}
+<<<<<<< HEAD
 
+=======
+y <- "does it work"
+>>>>>>> 5679031ba6502852c279d259a6e0d71e96fe95ee
 ```
 
 ## Section Three Eva
