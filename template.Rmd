@@ -26,7 +26,7 @@ html_text(cast, trim = TRUE)
 ## Section Two Tessa
 
 ```{r student2}
-
+x <- "does it work"
 ```
 
 ## Section Three Eva
