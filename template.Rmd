@@ -18,6 +18,32 @@ html <- read_html(country_url)
 cast <- html_nodes(html, "td:nth-child(3) .fn a , th+ td > a")
 
 html_text(cast, trim =TRUE)
+```
+
+```{r}
+library(tidyverse)
+# 1958, 2012-2023 tables
+url1_years <- c(1958, 2012:2023)
+url1 <- "https://en.wikipedia.org/wiki/List_of_Billboard_number-one_country_songs_of_"
+
+
+urlfunction1 <- function(year) {
+country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Billboard_number-one_country_songs_of_",  year)
+html <- read_html(country_url)
+cast <- html_nodes(html, "td:nth-child(3) .fn a , th+ td > a")
+html_text(cast, trim = TRUE) 
+tables <- html_table(html, fill = TRUE, header = TRUE)
+desired_table <- tables[[1]]
+return(desired_table)
+
+}
+abcd <- urlfunction1(i)
+for (i in url1_years) {
+  songs<-urlfunction1(i)
+
+}
+
+songs
 
 ```
 
@@ -44,7 +70,7 @@ for (i in 1958:2023) {
 ## Section Two Tessa
 
 ```{r student2}
-x <- "does it work"
+
 ```
 
 ## Section Three Eva
