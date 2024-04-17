@@ -37,6 +37,7 @@ desired_table <- tables[[1]]
 return(desired_table)
 
 }
+songs<-tibble()
 abcd <- urlfunction1(i)
 for (i in url1_years) {
   songs<-urlfunction1(i)
