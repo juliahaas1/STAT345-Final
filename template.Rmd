@@ -145,18 +145,24 @@ urlfunction <- function(year) {
     cast <- html_nodes(html, ".jquery-tablesorter th+ td a , .jquery-tablesorter th a")
   }  
 
-      html_text(cast, trim = TRUE) 
-      tables <- html_table(html, fill = TRUE, header = TRUE)
-      desired_table <- tables[[1]]
-      desired_table <- desired_table[, c(2, 3)]
-      if ("Title" %in% desired_table[1, ]) {
-         desired_table <- desired_table[-1, ]
+  html_text(cast, trim = TRUE) 
+  tables <- html_table(html, fill = TRUE, header = TRUE)
+  desired_table <- tables[[1]]
+  desired_table <- desired_table[, c(2, 3)]
+    #include only the second and third columns which are title and artist
+  if ("Title" %in% desired_table[1, ]) {
+    desired_table <- desired_table[-1, ]
+    #get rid of top row if they have an extra header row
           }
-      colnames(desired_table) <- c("Title", "Artist")
-      desired_table$Year <- year
-      desired_table$genre <- "Country" 
-      desired_table <- unique(desired_table)
-      return(desired_table)
+  colnames(desired_table) <- c("Title", "Artist")
+    #name columns
+  desired_table$Year <- year
+     #add columns for year
+  desired_table$genre <- "Country" 
+     #add column for genre
+  desired_table <- unique(desired_table)
+    #get rid of repeat columns
+  return(desired_table)
       
 }
 TopSongs <- data.frame()
