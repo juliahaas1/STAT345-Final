@@ -38,13 +38,12 @@ return(desired_table)
 
 }
 songs<-tibble()
-abcd <- urlfunction1(i)
+abcd <- urlfunction1()
 for (i in url1_years) {
-  songs<-urlfunction1(i)
+  abcd
 
 }
 
-songs
 
 ```
 
