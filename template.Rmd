@@ -97,10 +97,10 @@ TopSongs$Title<-gsub('"', '', TopSongs$Title)
 Topsongs2 <- replace(TopSongs," " , "-")
 
 lyrics <- function(title, artist) {
-lyric_url <- paste0("https://www.songlyrics.com/", artist, "/", title,"/")
+lyric_url <- paste0("https://www.songlyrics.com/", artist, "/", title,"-lyrics/")
 html <- read_html(lyric_url)
 cast <- html_nodes(html, "#songLyricsDiv")
-title <- 
 }
-lyrics()
+TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
+lyrics(let-her-cry, hootie-the-blowfish)
 ```
