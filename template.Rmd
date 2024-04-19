@@ -27,10 +27,11 @@ html_text(cast, trim = TRUE)
 
 ```{r student2}
 y <- "does it work"
+x <-"did she work"
 ```
 
 ## Section Three Eva
-
+commit test
 ```{r student3}
 library(rvest)
 # 1958, 2012-2023
@@ -109,10 +110,6 @@ for (i in url5_years) {
 }
 
 
-```
-
-```{r}
-urlfunction1(2012)
 ```
 
 
