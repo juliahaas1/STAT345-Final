@@ -167,6 +167,6 @@ for(year in 1958:2023){
 lyrics <- function(title, artist) {
 lyric_url <- paste0("https://www.songlyrics.com/", artist, "/", title,"/")
 html <- read_html(lyric_url)
-cast <- html_nodes(html, "#songLyricsDiv")
+cast <- html_nodes(html, "#songLyricsDiv") 
 }
 ```
