@@ -33,6 +33,7 @@ TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
 ## Section Three Eva
 
 ```{r student3}
+
 TopSongs2 <- as.data.frame(TopSongs2)
 TopSongs2$Title <- sub("-$", "", TopSongs2$Title)
 
