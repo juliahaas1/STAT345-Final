@@ -32,7 +32,7 @@ TopSongs$Title<-gsub('"', '', TopSongs$Title)
 library(rvest)
 
 TopSongs$Title <- tolower(TopSongs$Title)  
-TopSongs$Title <- gsub("[^a-zA-Z0-9 ]", "", TopSongs$Title)
+TopSongs$Title <- gsub("[^a-zA-Z0-9 ]", "", TopSongs$Title) 
 
 ```
 
