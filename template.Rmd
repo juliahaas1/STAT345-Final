@@ -13,10 +13,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r student1}
 library(rvest)
+country_url <- "https://en.wikipedia.org/wiki/List_of_Billboard_number-one_country_songs_of_2023"
+html <- read_html(country_url)
+cast <- html_nodes(html, "td:nth-child(3) .fn a , th+ td > a")
+
+html_text(cast, trim = TRUE)
 
 
-TopSongs$Title <- gsub("/.*", "", TopSongs$Title) 
-TopSongs$Title <- gsub('"', '', TopSongs$Title)
 ```
 
 
@@ -161,5 +164,9 @@ for(year in 1958:2023){
     current_year <- urlfunction(year)
     TopSongs <- rbind(TopSongs, current_year)
 }
-
+lyrics <- function(title, artist) {
+lyric_url <- paste0("https://www.songlyrics.com/", artist, "/", title,"/")
+html <- read_html(lyric_url)
+cast <- html_nodes(html, "#songLyricsDiv")
+}
 ```
