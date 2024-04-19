@@ -25,9 +25,7 @@ TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
 
 
 ## Section Two Tessa
-
 ```{r student2}
-
 ```
 
 ## Section Three Eva
