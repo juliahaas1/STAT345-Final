@@ -20,6 +20,7 @@ cast <- html_nodes(html, "td:nth-child(3) .fn a , th+ td > a")
 html_text(cast, trim = TRUE)
 
 
+
 ```
 
 
