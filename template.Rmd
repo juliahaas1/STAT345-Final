@@ -26,8 +26,7 @@ html_text(cast, trim = TRUE)
 ## Section Two Tessa
 
 ```{r student2}
-y <- "does it work"
-x <-"did she work"
+
 ```
 
 ## Section Three Eva
