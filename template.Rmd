@@ -17,6 +17,8 @@ library(rvest)
 TopSongs$Title<-gsub("/.*", "", TopSongs$Title)
 TopSongs$Title<-gsub('"', '', TopSongs$Title)
 
+TopSongs2<-gsub(' ', '-', TopSongs$Title)
+
 ```
 
 
