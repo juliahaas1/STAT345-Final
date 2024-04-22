@@ -26,6 +26,18 @@ TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
 
 ## Section Two Tessa
 ```{r student2}
+library(rvest)
+
+TopSongs_for_azlyrics <- sapply(TopSongs, function(x) tolower(gsub("\\s+", "", x)))
+
+azlyrics <- function(artist, title) {
+  azlyric_url <- paste0("https://www.azlyrics.com/lyrics/", artist, "/", title, ".html")
+  html <- read_html(azlyric_url)
+  cast <- html_nodes(html, "br+ div")
+}
+
+ballad_lyrics <-azlyrics("johnnycash","balladofateenagequeen")
+
 ```
 
 ## Section Three Eva
