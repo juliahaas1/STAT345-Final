@@ -29,7 +29,10 @@ TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
 library(rvest)
 library(stringr)
 
-songs_for_azlyrics <- as.data.frame(sapply(TopSongs, function(x) tolower(gsub("\\s+", "", x))))
+songs_for_azlyrics <- as.data.frame(sapply(TopSongs, function(x) {
+  lowercase_title <- tolower(gsub("\\s+", "", x)) # make names lower case for url
+}))
+songs_for_azlyrics$Artist <- gsub("^the", "", songs_for_azlyrics$Artist)
 
 # Purpose: To generate the lyrics for each song in our top song data frame from the azlyrics.com website
 # The function inputs (arguments): the function takes in an artist and title of a song
@@ -46,7 +49,7 @@ generate_azlyrics <- function(artist, title) {
 }
 
 #empty df:
-az_song_lyrics <- data.frame(artist = character(), title = character(), lyrics = character(), stringsAsFactors = FALSE)
+az_song_lyrics <- data.frame(Artist = character(), Title = character(), Lyrics = character(), stringsAsFactors = FALSE)
 
 for (i in 1:nrow(songs_for_azlyrics)) {
   artist <- songs_for_azlyrics$Artist[i]
@@ -59,8 +62,7 @@ for (i in 1:nrow(songs_for_azlyrics)) {
 
   az_song_lyrics <- rbind(az_song_lyrics, new_row)
 }
-# running into an error because some artists have "the" in front of their names in the data frame and not in the url for azlyrics.com. It stops at the 5th iteration because of the song all i have to do is dream by everly brothers, because the link is "https://www.azlyrics.com/lyrics/everlybrothers/allihavetodoisdream.html". The data frame songs_for_azlyrics has the artist as theeverlybrothers. Need to fix
-
+# gets to 10th iteration and scrape path must change? 
 ```
 
 ## Section Three Eva
