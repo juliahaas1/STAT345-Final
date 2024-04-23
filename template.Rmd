@@ -27,16 +27,39 @@ TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
 ## Section Two Tessa
 ```{r student2}
 library(rvest)
+library(stringr)
 
-TopSongs_for_azlyrics <- sapply(TopSongs, function(x) tolower(gsub("\\s+", "", x))) 
+songs_for_azlyrics <- as.data.frame(sapply(TopSongs, function(x) tolower(gsub("\\s+", "", x))))
 
-azlyrics <- function(artist, title) {
+# Purpose: To generate the lyrics for each song in our top song data frame from the azlyrics.com website
+# The function inputs (arguments): the function takes in an artist and title of a song
+# The function output (return value(s)): the function returns the lyrics to the song inputted in the function.
+generate_azlyrics <- function(artist, title) {
   azlyric_url <- paste0("https://www.azlyrics.com/lyrics/", artist, "/", title, ".html")
   html <- read_html(azlyric_url)
-  cast <- html_nodes(html, "br+ div")
-                
+  lyrics_node <- html_nodes(html, xpath = "//div[@class='ringtone']//following-sibling::div")
+  lyrics <- html_text(lyrics_node)
+  lyrics <- gsub("\r|\n", " ", lyrics) #replace newline with space
+  lyrics <- str_trim(lyrics) # trim white space
+  lyrics_only <-trimws(strsplit(lyrics, "\n")[[1]][1]) # keep only lyrics only, path picks up extra content
+  return(lyrics_only)
 }
-ballad_lyrics <-azlyrics("johnnycash","balladofateenagequeen")
+
+#empty df:
+az_song_lyrics <- data.frame(artist = character(), title = character(), lyrics = character(), stringsAsFactors = FALSE)
+
+for (i in 1:nrow(songs_for_azlyrics)) {
+  artist <- songs_for_azlyrics$Artist[i]
+  title <- songs_for_azlyrics$Title[i]
+  lyrics <- generate_azlyrics(artist, title)  
+  new_row <- data.frame(artist = artist,
+                        title = title,
+                        lyrics = lyrics,
+                        stringsAsFactors = FALSE)
+
+  az_song_lyrics <- rbind(az_song_lyrics, new_row)
+}
+# running into an error because some artists have "the" in front of their names in the data frame and not in the url for azlyrics.com. It stops at the 5th iteration because of the song all i have to do is dream by everly brothers, because the link is "https://www.azlyrics.com/lyrics/everlybrothers/allihavetodoisdream.html". The data frame songs_for_azlyrics has the artist as theeverlybrothers. Need to fix
 
 ```
 
