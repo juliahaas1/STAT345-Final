@@ -34,8 +34,8 @@ azlyrics <- function(artist, title) {
   azlyric_url <- paste0("https://www.azlyrics.com/lyrics/", artist, "/", title, ".html")
   html <- read_html(azlyric_url)
   cast <- html_nodes(html, "br+ div")
+                
 }
-
 ballad_lyrics <-azlyrics("johnnycash","balladofateenagequeen")
 
 ```
