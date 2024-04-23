@@ -67,12 +67,15 @@ for (i in 1:nrow(songs_for_azlyrics)) {
 
 ## Section Three Eva
 
-```{r student3}
+```{r}
 TopSongs2 <- as.data.frame(TopSongs2)
 TopSongs2$Title <- sub("-$", "", TopSongs2$Title)
-TopSongs2$Title <- gsub("[,.]", "", TopSongs2$Title)
-TopSongs2$Artist <- gsub("\\.", "", TopSongs2$Artist)
+TopSongs2$Title <- gsub("[,.?%()]", "", TopSongs2$Title)
+TopSongs2$Artist <- gsub("[.']", "", TopSongs2$Artist)
+TopSongs2$Artist <- sub("-and", "", TopSongs2$Artist)
+```
 
+```{r student3}
 scrape_lyrics <- function(df) {
   lyrics <- character(nrow(df))  
   for (i in 1:nrow(df)) {
@@ -88,6 +91,11 @@ scrape_lyrics <- function(df) {
   return(df)
 }
 TopSongs2 <- scrape_lyrics(TopSongs2)
+```
+
+```{r}
+sum(is.na(TopSongs2$lyrics) | TopSongs2$lyrics == "")
+nrow(TopSongs2)
 ```
 
 
