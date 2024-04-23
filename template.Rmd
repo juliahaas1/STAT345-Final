@@ -70,8 +70,6 @@ for (i in 1:nrow(songs_for_azlyrics)) {
 ```{r student3}
 TopSongs2 <- as.data.frame(TopSongs2)
 TopSongs2$Title <- sub("-$", "", TopSongs2$Title)
-
-TopSongs2 <- as.data.frame(TopSongs2)
 TopSongs2$Title <- gsub("[,.]", "", TopSongs2$Title)
 TopSongs2$Artist <- gsub("\\.", "", TopSongs2$Artist)
 
