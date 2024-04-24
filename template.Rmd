@@ -24,7 +24,7 @@ TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
 ```
 
 
-## Section Two Tessa
+## Section Two Tessa 
 ```{r student2}
 library(rvest)
 library(stringr)
@@ -62,7 +62,7 @@ for (i in 1:nrow(songs_for_azlyrics)) {
 
   az_song_lyrics <- rbind(az_song_lyrics, new_row)
 }
-# gets to 10th iteration and scrape path must change? 
+# gets to 10th iteration and scrape path must change?
 ```
 
 ## Section Three Eva
