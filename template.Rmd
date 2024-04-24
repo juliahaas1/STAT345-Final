@@ -68,16 +68,19 @@ for (i in 1:nrow(songs_for_azlyrics)) {
 ## Section Three Eva
 
 ```{r student3}
+# Modify artist and title names
 TopSongs2 <- as.data.frame(TopSongs2)
 TopSongs2$Title <- sub("-$", "", TopSongs2$Title)
 TopSongs2$Title <- gsub("[,.?%()]", "", TopSongs2$Title)
 TopSongs2$Artist <- gsub("[.']", "", TopSongs2$Artist)
 TopSongs2$Artist <- sub("-and", "", TopSongs2$Artist)
 
+# Function to scrape lyrics
 scrape_lyrics <- function(df) {
   lyrics <- character(nrow(df))  
   for (i in 1:nrow(df)) {
     url <- paste0("https://www.songlyrics.com/", df$Artist[i], "/", df$Title[i], "-lyrics/")
+    # Tests for errors when getting urls and makes sure code keeps running after an error occurs
     tryCatch({
       html <- read_html(url)
       raw_lyrics <- html_nodes(html, "#songLyricsDiv") %>% html_text() %>% as.character()
@@ -88,13 +91,15 @@ scrape_lyrics <- function(df) {
   df$lyrics <- lyrics  
   return(df)
 }
+# Implement function to our data frame
 TopSongs2 <- scrape_lyrics(TopSongs2)
 ```
 
 ```{r}
-sum(is.na(TopSongs2$lyrics) | TopSongs2$lyrics == "")
-nrow(TopSongs2)
-
+# Modifies song lyrics to match
+TopSongs2$lyrics <- gsub("\n", " ", TopSongs2$lyrics)
+TopSongs2$lyrics <- gsub(",", "", TopSongs2$lyrics)
+TopSongs2$lyrics <- tolower(TopSongs2$lyrics)
 ```
 
 
