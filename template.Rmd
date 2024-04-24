@@ -100,6 +100,9 @@ TopSongs2 <- scrape_lyrics(TopSongs2)
 TopSongs2$lyrics <- gsub("\n", " ", TopSongs2$lyrics)
 TopSongs2$lyrics <- gsub("[,.()]", "", TopSongs2$lyrics)
 TopSongs2$lyrics <- tolower(TopSongs2$lyrics)
+# Remove rows with missing lyrics
+TopSongs2 <- subset(TopSongs2, !(is.na(lyrics) | lyrics == ""))
+
 ```
 
 
