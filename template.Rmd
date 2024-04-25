@@ -26,8 +26,6 @@ TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
 #getting rid of duplicate songs
 unique <- TopSongs2[!duplicated(TopSongs2$Title), ]
 
-
-
 ```
 
 
@@ -169,3 +167,20 @@ cast <- html_nodes(html, "#songLyricsDiv")
 TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
 lyrics(let-her-cry, hootie-the-blowfish)
 ```
+
+
+
+
+```{r}
+
+
+
+
+```
+
+
+
+
+
+
+
