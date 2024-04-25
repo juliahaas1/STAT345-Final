@@ -29,40 +29,31 @@ TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
 library(rvest)
 library(stringr)
 
-songs_for_azlyrics <- as.data.frame(sapply(TopSongs, function(x) {
-  lowercase_title <- tolower(gsub("\\s+", "", x)) # make names lower case for url
-}))
-songs_for_azlyrics$Artist <- gsub("^the", "", songs_for_azlyrics$Artist)
-
-# Purpose: To generate the lyrics for each song in our top song data frame from the azlyrics.com website
-# The function inputs (arguments): the function takes in an artist and title of a song
-# The function output (return value(s)): the function returns the lyrics to the song inputted in the function.
-generate_azlyrics <- function(artist, title) {
-  azlyric_url <- paste0("https://www.azlyrics.com/lyrics/", artist, "/", title, ".html")
-  html <- read_html(azlyric_url)
-  lyrics_node <- html_nodes(html, xpath = "//div[@class='ringtone']//following-sibling::div")
-  lyrics <- html_text(lyrics_node)
-  lyrics <- gsub("\r|\n", " ", lyrics) #replace newline with space
-  lyrics <- str_trim(lyrics) # trim white space
-  lyrics_only <-trimws(strsplit(lyrics, "\n")[[1]][1]) # keep only lyrics only, path picks up extra content
-  return(lyrics_only)
+lyric_repetitiveness <- function(lyrics) {
+  words <- unlist(strsplit(lyrics, "\\W+"))
+  repetitive_phrases_df <- data.frame( Phrase = character(), Frequency = numeric())
+  # Find repetitive phrases of length 3 or more
+  for (n in seq(3, length(words))) {
+    # Generate n-grams - What are n grams?
+    ngrams <-sapply(seq_along(words), function(i)
+        paste(words[i:min(i + n - 1, length(words))], collapse = " "))
+    ngram_freq <- table(ngrams)
+    frequent_ngrams <- ngram_freq[ngram_freq >= 3]
+    if (length(frequent_ngrams) > 0) {
+      frequent_ngrams_df <- data.frame(Phrase = names(frequent_ngrams), Frequency = as.numeric(frequent_ngrams))
+      repetitive_phrases_df <- rbind(repetitive_phrases_df, frequent_ngrams_df)
+    }
+  }
+  
+  repetitive_phrases_df <- unique(repetitive_phrases_df)
+  repetitiveness <- 1 - length(unique(words)) / length(words)
+  return(list(repetitiveness = repetitiveness, repetitive_phrases = repetitive_phrases_df))
 }
 
-#empty df:
-az_song_lyrics <- data.frame(Artist = character(), Title = character(), Lyrics = character(), stringsAsFactors = FALSE)
+y <- TopSongs2$lyrics[1]
+y
+lyric_repetitiveness(y)
 
-for (i in 1:nrow(songs_for_azlyrics)) {
-  artist <- songs_for_azlyrics$Artist[i]
-  title <- songs_for_azlyrics$Title[i]
-  lyrics <- generate_azlyrics(artist, title)  
-  new_row <- data.frame(artist = artist,
-                        title = title,
-                        lyrics = lyrics,
-                        stringsAsFactors = FALSE)
-
-  az_song_lyrics <- rbind(az_song_lyrics, new_row)
-}
-# gets to 10th iteration and scrape path must change?
 ```
 
 ## Section Three Eva
