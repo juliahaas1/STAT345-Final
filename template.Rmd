@@ -93,6 +93,7 @@ TopSongs2$lyrics <- gsub("[,.()]", "", TopSongs2$lyrics)
 TopSongs2$lyrics <- tolower(TopSongs2$lyrics)
 # Remove rows with missing lyrics
 TopSongs2 <- subset(TopSongs2, !(is.na(lyrics) | lyrics == ""))
+TopSongs2 <- subset(TopSongs2, !grepl("we do not have the lyrics for", lyrics))
 
 ```
 
