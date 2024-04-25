@@ -13,19 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r student1}
 library(rvest)
-#remove slash and everything behind it
-TopSongs$Title<-gsub("/.*", "", TopSongs$Title)
-
-#remove quotation marks
-TopSongs$Title<-gsub('"', '', TopSongs$Title)
-
-#new data frame with dashes instead of spaces for url purposes
-TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
-
-
-#getting rid of duplicate songs
-unique <- TopSongs2[!duplicated(TopSongs2$Title), ]
-
 ```
 
 
