@@ -166,6 +166,5 @@ lyric_url <- paste0("https://www.songlyrics.com/", artist, "/", title,"-lyrics/"
 html <- read_html(lyric_url)
 cast <- html_nodes(html, "#songLyricsDiv")
 }
-TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
-lyrics(let-her-cry, hootie-the-blowfish)
+
 ```
