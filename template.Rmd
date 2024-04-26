@@ -96,63 +96,7 @@ TopSongs2 <- subset(TopSongs2, !grepl("we do not have the lyrics for", lyrics))
 
 ```{r student4}
 
-urlfunction <- function(year) {
-  if (year == 1958 || (year >= 2012 && year <= 2023)) {
-      country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Billboard_number-one_country_songs_of_",  year)
-      html <- read_html(country_url)
-      cast <- html_nodes(html, "td:nth-child(3) .fn a , th+ td > a")
-  }else if (year >= 1959 && year <= 1961){
-      country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Hot_C%26W_Sides_number_ones_of_",  year)
-      html <- read_html(country_url)
-      cast <- html_nodes(html, ".jquery-tablesorter span a , .jquery-tablesorter th a")
-  }else if (year >= 1962 && year <= 1989) {
-      country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Hot_Country_Singles_number_ones_of_",  year)
-      html <- read_html(country_url)
-      cast <- html_nodes(html, ".fn a , td > a")
-  }else if (year >= 1990 && year <= 2004) {
-      country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Hot_Country_Singles_%26_Tracks_number_ones_of_",  year)
-      html <- read_html(country_url)
-      cast <- html_nodes(html, ".jquery-tablesorter th+ td a , .jquery-tablesorter th a")
-  }else { 
-    country_url <- paste0("https://en.wikipedia.org/wiki/List_of_Hot_Country_Songs_number_ones_of_",  year)
-    html <- read_html(country_url)
-    cast <- html_nodes(html, ".jquery-tablesorter th+ td a , .jquery-tablesorter th a")
-  }  
 
-  html_text(cast, trim = TRUE) 
-  tables <- html_table(html, fill = TRUE, header = TRUE)
-  desired_table <- tables[[1]]
-  desired_table <- desired_table[, c(2, 3)]
-    #include only the second and third columns which are title and artist
-  if ("Title" %in% desired_table[1, ]) {
-    desired_table <- desired_table[-1, ]
-    #get rid of top row if they have an extra header row
-          }
-  colnames(desired_table) <- c("Title", "Artist")
-    #name columns
-  desired_table$Year <- year
-     #add columns for year
-  desired_table$genre <- "Country" 
-     #add column for genre
-  desired_table <- unique(desired_table)
-    #get rid of repeat columns
-  return(desired_table)
-      
-}
-TopSongs <- data.frame()
-for(year in 1958:2023){
-    current_year <- urlfunction(year)
-    TopSongs <- rbind(TopSongs, current_year)
-}
-TopSongs$Title<-gsub("/.*", "", TopSongs$Title)
-TopSongs$Title<-gsub('"', '', TopSongs$Title)
-Topsongs2 <- replace(TopSongs," " , "-")
-
-lyrics <- function(title, artist) {
-lyric_url <- paste0("https://www.songlyrics.com/", artist, "/", title,"-lyrics/")
-html <- read_html(lyric_url)
-cast <- html_nodes(html, "#songLyricsDiv")
-}
 
 ```
 
@@ -263,24 +207,24 @@ scrape_lyrics <- function(df) {
   return(df)
 }
 # Apply function to our data frame
-TopSongs2 <- scrape_lyrics(TopSongs2)
+TopSongs3 <- scrape_lyrics(TopSongs2)
 ```
 
 ```{r}
 ###EVA#####
 # Modifies song lyrics to match
-TopSongs2$lyrics <- gsub("\n", " ", TopSongs2$lyrics)
-TopSongs2$lyrics <- gsub("[,.()]", "", TopSongs2$lyrics)
-TopSongs2$lyrics <- tolower(TopSongs2$lyrics)
+TopSongs3$lyrics <- gsub("\n", " ", TopSongs3$lyrics)
+TopSongs3$lyrics <- gsub("[,.()]", "", TopSongs3$lyrics)
+TopSongs3$lyrics <- tolower(TopSongs3$lyrics)
 # Remove rows with missing lyrics
-TopSongs2 <- subset(TopSongs2, !(is.na(lyrics) | lyrics == ""))
-TopSongs2 <- subset(TopSongs2, !grepl("we do not have the lyrics for", lyrics))
+TopSongs3 <- subset(TopSongs3, !(is.na(lyrics) | lyrics == ""))
+TopSongs3 <- subset(TopSongs3, !grepl("we do not have the lyrics for", lyrics))
 
 
 
 ##JULIA###
 #getting rid of duplicate songs
-unique <- TopSongs2[!duplicated(TopSongs2$Title), ]
+unique <- TopSongs3[!duplicated(TopSongs3$Title), ]
 
 
 
