@@ -13,6 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r student1}
 library(rvest)
+
+write.csv(TopSongs2, "TopCountry.csv", row.names = FALSE)
 ```
 
 
@@ -279,6 +281,8 @@ TopSongs2 <- subset(TopSongs2, !grepl("we do not have the lyrics for", lyrics))
 ##JULIA###
 #getting rid of duplicate songs
 unique <- TopSongs2[!duplicated(TopSongs2$Title), ]
+
+
 
 ```
 
