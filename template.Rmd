@@ -51,7 +51,7 @@ lyric_repetitiveness <- function(lyrics) {
   }
   
   repetitive_phrases_df <- unique(repetitive_phrases_df)
-  repetitiveness <- 1 - length(unique(words)) / length(words)
+  repetitiveness <- length(unique(words)) / length(words)
   return(list(repetitiveness = repetitiveness, repetitive_phrases = repetitive_phrases_df))
 }
 
