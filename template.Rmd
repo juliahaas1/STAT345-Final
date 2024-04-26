@@ -14,7 +14,21 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r student1}
 library(rvest)
 
-write.csv(TopSongs2, "TopCountry.csv", row.names = FALSE)
+#get rid of the dashes and make them spaces
+TopSongs3$Title <- gsub("-", " ", TopSongs3$Title)
+TopSongs3$Artist <- gsub("-", " ", TopSongs3$Artist)
+
+#change title and artist to all lower case
+TopSongs3$Title<-tolower(TopSongs3$Title)
+TopSongs3$Artist<-tolower(TopSongs3$Artist)
+
+
+#save it as a csv file to working directory
+write.csv(TopSongs3, "TopCountry.csv", row.names = FALSE)
+
+#call it to test that it works and reads it correctly
+TopCountry<-read.csv("TopCountry.csv")
+
 ```
 
 
