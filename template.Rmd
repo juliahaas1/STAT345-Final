@@ -60,8 +60,17 @@ lyric_repetitiveness <- function(lyrics) {
 
 y <- TopSongs2$lyrics[1]
 y
-lyric_repetitiveness(y)
+# lyric_repetitiveness(y)
 
+lyric_uniqueness <- function(lyrics) {
+  words <- unlist(strsplit(lyrics, "\\W+"))
+  unique_words <- unique(words)
+  freq <-table(words)
+  unique_df <- data.frame(Words = names(freq), Frequency = as.numeric(freq))
+  return(unique_df)
+}
+
+lyric_uniqueness(y)
 ```
 
 ## Section Three Eva
