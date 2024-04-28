@@ -13,18 +13,21 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r student1}
 library(rvest)
-#remove slash and everything behind it
-TopSongs$Title<-gsub("/.*", "", TopSongs$Title)
 
-#remove quotation marks
-TopSongs$Title<-gsub('"', '', TopSongs$Title)
+#get rid of the dashes and make them spaces
+TopSongs3$Title <- gsub("-", " ", TopSongs3$Title)
+TopSongs3$Artist <- gsub("-", " ", TopSongs3$Artist)
 
-#new data frame with dashes instead of spaces for url purposes
-TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
+#change title and artist to all lower case
+TopSongs3$Title<-tolower(TopSongs3$Title)
+TopSongs3$Artist<-tolower(TopSongs3$Artist)
 
 
-#getting rid of duplicate songs
-unique <- TopSongs2[!duplicated(TopSongs2$Title), ]
+#save it as a csv file to working directory
+write.csv(TopSongs3, "TopCountry.csv", row.names = FALSE)
+
+#call it to test that it works and reads it correctly
+TopCountry<-read.csv("TopCountry.csv")
 
 ```
 
@@ -51,7 +54,7 @@ lyric_repetitiveness <- function(lyrics) {
   }
   
   repetitive_phrases_df <- unique(repetitive_phrases_df)
-  repetitiveness <- 1 - length(unique(words)) / length(words)
+  repetitiveness <- length(unique(words)) / length(words)
   return(list(repetitiveness = repetitiveness, repetitive_phrases = repetitive_phrases_df))
 }
 
@@ -302,6 +305,8 @@ TopSongs3 <- subset(TopSongs3, !grepl("we do not have the lyrics for", lyrics))
 ##JULIA###
 #getting rid of duplicate songs
 unique <- TopSongs3[!duplicated(TopSongs3$Title), ]
+
+
 
 ```
 
