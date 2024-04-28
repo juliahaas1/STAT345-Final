@@ -36,41 +36,59 @@ TopCountry<-read.csv("TopCountry.csv")
 ```{r student2}
 library(rvest)
 library(stringr)
+library(tidytext)
+library(dplyr)
+library(stopwords)
 
-lyric_repetitiveness <- function(lyrics) {
-  words <- unlist(strsplit(lyrics, "\\W+"))
-  repetitive_phrases_df <- data.frame( Phrase = character(), Frequency = numeric())
-  # Find repetitive phrases of length 3 or more
-  for (n in seq(3, length(words))) {
-    # Generate n-grams - What are n grams?
-    ngrams <-sapply(seq_along(words), function(i)
-        paste(words[i:min(i + n - 1, length(words))], collapse = " "))
-    ngram_freq <- table(ngrams)
-    frequent_ngrams <- ngram_freq[ngram_freq >= 3]
-    if (length(frequent_ngrams) > 0) {
-      frequent_ngrams_df <- data.frame(Phrase = names(frequent_ngrams), Frequency = as.numeric(frequent_ngrams))
-      repetitive_phrases_df <- rbind(repetitive_phrases_df, frequent_ngrams_df)
-    }
-  }
+lyric_uniqueness <- function(song_lyrics) {
+  # initalize empty vector to hold words
+  all_words <- c() 
+  stop_words <-stopwords("en") # initalize english stopwords from stopswords package
   
-  repetitive_phrases_df <- unique(repetitive_phrases_df)
-  repetitiveness <- length(unique(words)) / length(words)
-  return(list(repetitiveness = repetitiveness, repetitive_phrases = repetitive_phrases_df))
-}
-
-y <- TopSongs2$lyrics[1]
-y
-# lyric_repetitiveness(y)
-
-lyric_uniqueness <- function(lyrics) {
-  words <- unlist(strsplit(lyrics, "\\W+"))
-  unique_words <- unique(words)
-  freq <-table(words)
+  for (lyrics in song_lyrics) {
+    # words <- unlist(strsplit(lyrics, "\\W+")) 
+    words <- unlist(strsplit(lyrics, "\\s+")) #splits word at whitespace
+    words <-words[!words %in% stop_words] # remove stop words
+    all_words <-c(all_words, words) 
+  }
+  unique_words <-unique(all_words) # removes duplicate words
+  freq <-table(all_words) # counts how many times each word shows up
+  
+  # make data frame with all the words and their frequency
   unique_df <- data.frame(Words = names(freq), Frequency = as.numeric(freq))
   return(unique_df)
 }
 
-lyric_uniqueness(y)
+result <-lyric_uniqueness(TopCountry$lyrics)
+
+# shows words that show up 50 or more times
+result_50 <- result[result$Frequency >= 50, ]
+result_50
+
+
+
+unique_words_ratio <- function(song_lyrics) {
+  # make lyrics into single words
+  token_lyrics <- song_lyrics %>%
+    unnest_tokens(words, lyrics) 
+  
+  # find total number of words, then number of unique words using 
+  total_words <-nrow(token_lyrics)
+  unique_words <- token_lyrics %>%
+    distinct(words) %>%
+    nrow()
+  
+  #calculate ratio of unique words compared to all words
+  ratio <- unique_words / total_words
+
+  cat("Total number of words:", total_words, "\n")
+  cat("Number of unique words:", unique_words, "\n")
+  cat("Ratio of unique words to total words:", ratio, "\n")
+  
+}
+
+unique_words_ratio(TopCountry) 
+
 ```
 
 ## Section Three Eva
