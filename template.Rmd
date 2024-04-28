@@ -106,9 +106,75 @@ TopSongs2 <- subset(TopSongs2, !grepl("we do not have the lyrics for", lyrics))
 ## Section Four Sophie 
 
 ```{r student4}
+alcohol <- c("whiskey", "moonshine", "beer", "wine", "tequila", "vodka", "jack daniels", "budlight", "coorslight", "busch", "alcohol", "rum", "gin", "brandy", "cognac", "schnapps", "absinthe", "champagne", "sake")
+intimacy <- c("sexy", "hot", "sex", "attractive", "baby", "babe", "lover", "sweetheart", "passion", "desire", "romance", "affection", "intimacy", "seductive", "lust")
+family <- c("mom", "mama", "granny", "marriage", "children", "marry", "wife", "husband", "dogs", "father", "daddy", "grandpa", "grandmother", "aunt", "uncle", "cousin", "siblings", "in-laws", "offspring")
+drugs <- c("coke", "cocane", "tabacco", "weed", "heroin", "methamphetamine", "LSD", "ecstasy", "prescription drugs", "opioids", "hallucinogens", "MDMA", "smoke", "smoking")
+guns <- c("gun", "guns", "revolver", "shotgun", "rifle", "pistol", "firearm", "ammunition", "sniper", "handgun", "arsenal")
+music <- c("melody", "rhythm", "harmony", "lyrics", "genre", "beat", "album", "artist", "band", "guitar")
+sad <- c("heartbreak", "sorrow", "grief", "despair", "melancholy", "misery", "anguish", "heartache", "depression", "tears")
+countylivin <- c("cowboy", "horse", "truck", "pickup", "road", "tea", "tractor", "barn", "ranch", "cattle", "hay", "pasture", "cowboy boots", "western", "yeehaw", "rodeo")
+town <- c("small town", "hometown", "back home", "home", "village", "community", "neighborhood", "suburb", "township", "locality", "settlement")
+swear <- c("hell", "damn", "fuck", "bitch", "bitch", "ass", "asshole", "bastard", "shit", "bloody", "hellfire", "motherfucker", "crap", "piss", "bollocks", "wanker", "bugger")
+
+alcohol_count <- 0
+intimacy_count <- 0
+family_count <- 0
+drugs_count <- 0
+guns_count <- 0
+music_count <- 0
+sad_count <- 0
+countylivin_count <- 0
+town_count <- 0
+swear_count <- 0
+
+# Loop through each row of the lyrics column in Topsongs2
+for (lyric in TopSongs2$lyrics) {
+  # Check if any word from each vector is present in the lyrics
+  if (any(grepl(paste(alcohol, collapse = "|"), lyric, ignore.case = TRUE))) {
+    alcohol_count <- alcohol_count + 1
+  }
+  if (any(grepl(paste(intimacy, collapse = "|"), lyric, ignore.case = TRUE))) {
+    intimacy_count <- intimacy_count + 1
+  }
+  if (any(grepl(paste(family, collapse = "|"), lyric, ignore.case = TRUE))) {
+    family_count <- family_count + 1
+  }
+  if (any(grepl(paste(drugs, collapse = "|"), lyric, ignore.case = TRUE))) {
+    drugs_count <- drugs_count + 1
+  }
+  if (any(grepl(paste(guns, collapse = "|"), lyric, ignore.case = TRUE))) {
+    guns_count <- guns_count + 1
+  }
+  if (any(grepl(paste(music, collapse = "|"), lyric, ignore.case = TRUE))) {
+    music_count <- music_count + 1
+  }
+  if (any(grepl(paste(sad, collapse = "|"), lyric, ignore.case = TRUE))) {
+    sad_count <- sad_count + 1
+  }
+  if (any(grepl(paste(countylivin, collapse = "|"), lyric, ignore.case = TRUE))) {
+    countylivin_count <- countylivin_count + 1
+  }
+  if (any(grepl(paste(town, collapse = "|"), lyric, ignore.case = TRUE))) {
+    town_count <- town_count + 1
+  }
+  if (any(grepl(paste(swear, collapse = "|"), lyric, ignore.case = TRUE))) {
+    swear_count <- swear_count + 1
+  }
+}
+
+# Create a data frame to store the counts
+total_counts <- data.frame(
+  vector = c("Alcohol", "Intimacy", "Family", "Drugs", "Guns", "Music", "Sad", "Country Living", "Town", "Swear"),
+  count = c(alcohol_count, intimacy_count, family_count, drugs_count, guns_count, music_count, sad_count, countylivin_count, town_count, swear_count)
+)
 
 
-
+# Create a bar chart using ggplot
+ggplot(total_counts, aes(x = vector, y = count)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Vector", y = "Total Count of Songs") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 
