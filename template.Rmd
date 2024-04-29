@@ -62,8 +62,8 @@ common_words <- function(song_lyrics) {
 result <-common_words(TopCountry$lyrics)
 
 # shows words that show up 50 or more times
-result_50 <- result[result$Frequency >= 50, ]
-result_50
+# result_50 <- result[result$Frequency >= 50, ]
+# result_50
 
 
 
