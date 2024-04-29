@@ -29,6 +29,24 @@ write.csv(TopSongs3, "TopCountry.csv", row.names = FALSE)
 #call it to test that it works and reads it correctly
 TopCountry<-read.csv("TopCountry.csv")
 
+
+
+
+#Look at years 1958 through 1968
+decade1 <- TopCountry$Year >= 1958 & TopCountry$Year <= 1968
+decade1data <- TopCountry[decade1, ]
+
+# Load required libraries
+library(tm) # for text mining
+library(topicmodels) # for topic modeling
+
+
+# Create a document-term matrix (DTM) for topic modeling
+corpus <- Corpus(VectorSource(decade1data$lyrics))
+corpus <- tm_map(corpus, removeWords, stopwords("english"))
+
+
+
 ```
 
 
