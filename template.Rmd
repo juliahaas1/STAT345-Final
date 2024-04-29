@@ -41,13 +41,13 @@ library(dplyr)
 library(stopwords)  
 
 common_words <- function(song_lyrics) {
-  # initalize empty vector to hold words
+  # initialize empty vector to hold words
   all_words <- c() 
-  stop_words <-stopwords("en") # initalize english stopwords from stopswords package
+  stop_words <-stopwords("en") # initialize English stop words from stopswords package
   
   for (lyrics in song_lyrics) {
     # words <- unlist(strsplit(lyrics, "\\W+")) 
-    words <- unlist(strsplit(lyrics, "\\s+")) #splits word at whitespace
+    words <- unlist(strsplit(lyrics, "\\s+")) #splits word at white space
     words <-words[!words %in% stop_words] # remove stop words
     all_words <-c(all_words, words) 
   }
