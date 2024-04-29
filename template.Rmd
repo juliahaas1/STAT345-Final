@@ -54,31 +54,58 @@ corpus <- tm_map(corpus, removeWords, stopwords("english"))
 ```{r student2}
 library(rvest)
 library(stringr)
+library(tidytext)
+library(dplyr)
+library(stopwords)
 
-lyric_repetitiveness <- function(lyrics) {
-  words <- unlist(strsplit(lyrics, "\\W+"))
-  repetitive_phrases_df <- data.frame( Phrase = character(), Frequency = numeric())
-  # Find repetitive phrases of length 3 or more
-  for (n in seq(3, length(words))) {
-    # Generate n-grams - What are n grams?
-    ngrams <-sapply(seq_along(words), function(i)
-        paste(words[i:min(i + n - 1, length(words))], collapse = " "))
-    ngram_freq <- table(ngrams)
-    frequent_ngrams <- ngram_freq[ngram_freq >= 3]
-    if (length(frequent_ngrams) > 0) {
-      frequent_ngrams_df <- data.frame(Phrase = names(frequent_ngrams), Frequency = as.numeric(frequent_ngrams))
-      repetitive_phrases_df <- rbind(repetitive_phrases_df, frequent_ngrams_df)
-    }
-  }
+common_words <- function(song_lyrics) {
+  # initalize empty vector to hold words
+  all_words <- c() 
+  stop_words <-stopwords("en") # initalize english stopwords from stopswords package
   
-  repetitive_phrases_df <- unique(repetitive_phrases_df)
-  repetitiveness <- length(unique(words)) / length(words)
-  return(list(repetitiveness = repetitiveness, repetitive_phrases = repetitive_phrases_df))
+  for (lyrics in song_lyrics) {
+    # words <- unlist(strsplit(lyrics, "\\W+")) 
+    words <- unlist(strsplit(lyrics, "\\s+")) #splits word at whitespace
+    words <-words[!words %in% stop_words] # remove stop words
+    all_words <-c(all_words, words) 
+  }
+  unique_words <-unique(all_words) # removes duplicate words
+  freq <-table(all_words) # counts how many times each word shows up
+  
+  # make data frame with all the words and their frequency
+  unique_df <- data.frame(Words = names(freq), Frequency = as.numeric(freq))
+  return(unique_df)
 }
 
-y <- TopSongs2$lyrics[1]
-y
-lyric_repetitiveness(y)
+result <-common_words(TopCountry$lyrics)
+
+# shows words that show up 50 or more times
+result_50 <- result[result$Frequency >= 50, ]
+result_50
+
+
+
+unique_words_ratio <- function(song_lyrics) {
+  # make lyrics into single words
+  token_lyrics <- song_lyrics %>%
+    unnest_tokens(words, lyrics) 
+  
+  # find total number of words, then number of unique words using 
+  total_words <-nrow(token_lyrics)
+  unique_words <- token_lyrics %>%
+    distinct(words) %>%
+    nrow()
+  
+  #calculate ratio of unique words compared to all words
+  ratio <- unique_words / total_words
+
+  cat("Total number of words:", total_words, "\n")
+  cat("Number of unique words:", unique_words, "\n")
+  cat("Ratio of unique words to total words:", ratio, "\n")
+  
+}
+
+unique_words_ratio(TopCountry) 
 
 ```
 
@@ -127,9 +154,75 @@ TopSongs2 <- subset(TopSongs2, !grepl("we do not have the lyrics for", lyrics))
 ## Section Four Sophie 
 
 ```{r student4}
+alcohol <- c("whiskey", "moonshine", "beer", "wine", "tequila", "vodka", "jack daniels", "budlight", "coorslight", "busch", "alcohol", "rum", "gin", "brandy", "cognac", "schnapps", "absinthe", "champagne", "sake")
+intimacy <- c("sexy", "hot", "sex", "attractive", "baby", "babe", "lover", "sweetheart", "passion", "desire", "romance", "affection", "intimacy", "seductive", "lust")
+family <- c("mom", "mama", "granny", "marriage", "children", "marry", "wife", "husband", "dogs", "father", "daddy", "grandpa", "grandmother", "aunt", "uncle", "cousin", "siblings", "in-laws", "offspring")
+drugs <- c("coke", "cocane", "tabacco", "weed", "heroin", "methamphetamine", "LSD", "ecstasy", "prescription drugs", "opioids", "hallucinogens", "MDMA", "smoke", "smoking")
+guns <- c("gun", "guns", "revolver", "shotgun", "rifle", "pistol", "firearm", "ammunition", "sniper", "handgun", "arsenal")
+music <- c("melody", "rhythm", "harmony", "lyrics", "genre", "beat", "album", "artist", "band", "guitar")
+sad <- c("heartbreak", "sorrow", "grief", "despair", "melancholy", "misery", "anguish", "heartache", "depression", "tears")
+countylivin <- c("cowboy", "horse", "truck", "pickup", "road", "tea", "tractor", "barn", "ranch", "cattle", "hay", "pasture", "cowboy boots", "western", "yeehaw", "rodeo")
+town <- c("small town", "hometown", "back home", "home", "village", "community", "neighborhood", "suburb", "township", "locality", "settlement")
+swear <- c("hell", "damn", "fuck", "bitch", "bitch", "ass", "asshole", "bastard", "shit", "bloody", "hellfire", "motherfucker", "crap", "piss", "bollocks", "wanker", "bugger")
+
+alcohol_count <- 0
+intimacy_count <- 0
+family_count <- 0
+drugs_count <- 0
+guns_count <- 0
+music_count <- 0
+sad_count <- 0
+countylivin_count <- 0
+town_count <- 0
+swear_count <- 0
+
+# Loop through each row of the lyrics column in Topsongs2
+for (lyric in TopSongs2$lyrics) {
+  # Check if any word from each vector is present in the lyrics
+  if (any(grepl(paste(alcohol, collapse = "|"), lyric, ignore.case = TRUE))) {
+    alcohol_count <- alcohol_count + 1
+  }
+  if (any(grepl(paste(intimacy, collapse = "|"), lyric, ignore.case = TRUE))) {
+    intimacy_count <- intimacy_count + 1
+  }
+  if (any(grepl(paste(family, collapse = "|"), lyric, ignore.case = TRUE))) {
+    family_count <- family_count + 1
+  }
+  if (any(grepl(paste(drugs, collapse = "|"), lyric, ignore.case = TRUE))) {
+    drugs_count <- drugs_count + 1
+  }
+  if (any(grepl(paste(guns, collapse = "|"), lyric, ignore.case = TRUE))) {
+    guns_count <- guns_count + 1
+  }
+  if (any(grepl(paste(music, collapse = "|"), lyric, ignore.case = TRUE))) {
+    music_count <- music_count + 1
+  }
+  if (any(grepl(paste(sad, collapse = "|"), lyric, ignore.case = TRUE))) {
+    sad_count <- sad_count + 1
+  }
+  if (any(grepl(paste(countylivin, collapse = "|"), lyric, ignore.case = TRUE))) {
+    countylivin_count <- countylivin_count + 1
+  }
+  if (any(grepl(paste(town, collapse = "|"), lyric, ignore.case = TRUE))) {
+    town_count <- town_count + 1
+  }
+  if (any(grepl(paste(swear, collapse = "|"), lyric, ignore.case = TRUE))) {
+    swear_count <- swear_count + 1
+  }
+}
+
+# Create a data frame to store the counts
+total_counts <- data.frame(
+  vector = c("Alcohol", "Intimacy", "Family", "Drugs", "Guns", "Music", "Sad", "Country Living", "Town", "Swear"),
+  count = c(alcohol_count, intimacy_count, family_count, drugs_count, guns_count, music_count, sad_count, countylivin_count, town_count, swear_count)
+)
 
 
-
+# Create a bar chart using ggplot
+ggplot(total_counts, aes(x = vector, y = count)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Vector", y = "Total Count of Songs") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 
