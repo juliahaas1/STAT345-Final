@@ -38,7 +38,7 @@ library(rvest)
 library(stringr)
 library(tidytext)
 library(dplyr)
-library(stopwords)
+library(stopwords) 
 
 common_words <- function(song_lyrics) {
   # initalize empty vector to hold words
