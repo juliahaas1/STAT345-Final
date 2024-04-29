@@ -40,7 +40,7 @@ library(tidytext)
 library(dplyr)
 library(stopwords)
 
-lyric_uniqueness <- function(song_lyrics) {
+common_words <- function(song_lyrics) {
   # initalize empty vector to hold words
   all_words <- c() 
   stop_words <-stopwords("en") # initalize english stopwords from stopswords package
@@ -59,7 +59,7 @@ lyric_uniqueness <- function(song_lyrics) {
   return(unique_df)
 }
 
-result <-lyric_uniqueness(TopCountry$lyrics)
+result <-common_words(TopCountry$lyrics)
 
 # shows words that show up 50 or more times
 result_50 <- result[result$Frequency >= 50, ]
