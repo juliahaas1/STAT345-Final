@@ -45,8 +45,7 @@ library(topicmodels) # for topic modeling
 corpus <- Corpus(VectorSource(decade1data$lyrics))
 corpus <- tm_map(corpus, removeWords, stopwords("english"))
 
-
-
+result %>% top_n(20, Frequency)
 ```
 
 
