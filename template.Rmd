@@ -41,6 +41,7 @@ library(dplyr)
 library(stopwords)  
 library(tidyr)
 
+
 common_words <- function(song_lyrics) {
   # initialize empty vector to hold words
   all_words <- c() 
