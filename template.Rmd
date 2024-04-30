@@ -41,7 +41,6 @@ library(dplyr)
 library(stopwords)  
 library(tidyr)
 
-
 common_words <- function(song_lyrics) {
   # initialize empty vector to hold words
   all_words <- c() 
@@ -87,6 +86,7 @@ unique_words_ratio <- function(song_lyrics) {
   
 }
 
+overall_unique_words_ratio <-unique_words_ratio(TopCountry)
 
 unique_words_ratio_by_year <- function(song_df) {
   # make lyrics into single words
@@ -103,41 +103,24 @@ unique_words_ratio_by_year <- function(song_df) {
   
   return(unique_words_by_year)
 }
-unique_words_ratio_by_year <-unique_words_ratio_by_year(TopCountry)
+unique_words_ratio_by_year <- unique_words_ratio_by_year(TopCountry)
+# low ratio means songs are more repetitive
 
-ggplot(unique_words_ratio_by_year, aes(x = Year, y = ratio)) +
+unique_ratio_graph_by_year <-
+  ggplot(unique_words_ratio_by_year, aes(x = Year, y = ratio)) +
   geom_line() +
   labs(title = "Unique Words Ratio Over Time",
        x = "Year",
        y = "Unique Words Ratio") +
-  theme_minimal()
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5)) 
+
+unique_ratio_graph_by_year
 
 ```
+
 ```{r}
-
-title_repetition <- function(song_df) {
-# initializes empty data frame with columns of Title and Repeats to hold results
-  results <- data.frame(Title = character(nrow(song_df)), Repeats = numeric(nrow(song_df)))
-# for each row in inputted data frame:
-  for (i in 1:nrow(song_df)) { 
-    title <- song_df$Title[i]  # extract title 
-    lyrics <- song_df$lyrics[i] # extract lyrics
-  
-    title_count <- sum(gregexpr(title, lyrics)[[1]] > 0) # sum number of times the title is in the lyrics
-
-    results[i, "Title"] <- title 
-    results[i, "Repeats"] <- title_count
-  }
-  
-  mean_repeats <-mean(results$Repeats) # find mean number of repeats 
-  cat("Mean number of title repeats in lyrics:", mean_repeats)
-   
-  return(results)
-}
-
-# title_repetition(TopCountry)
-
-title_repetition_2 <- function(song_df) {
+generate_title_repetition_column <- function(song_df) {
   # Initialize empty data frame with columns of Title and Repeats to hold results
   song_df$Repeats <- numeric(nrow(song_df))
   
@@ -160,20 +143,21 @@ title_repetition_2 <- function(song_df) {
   return(song_df)
 }
 
-title_repetition_df <- title_repetition_2(TopCountry)
+title_repetition_df_TopCountry <- generate_title_repetition_column(TopCountry)
 
-```
-```{r}
 library(ggplot2)
+
 ggplot(title_repetition_df, aes(x = Year, y = Repeats)) +
-  geom_point() +
-  geom_smooth(se = FALSE) +
+  geom_point(position = position_jitter(width = 0.1), size = 0.75) +
+  geom_smooth(method = "lm",se = FALSE) +
   labs(title = "Average Title Repeats Over Time",
        x = "Year",
        y = "Mean Title Repeats") +
-  theme_minimal()
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(title_repetition_df$Repeats), by = 5))
 
 ```
+
 
 
 ## Section Three Eva
