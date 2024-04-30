@@ -41,6 +41,8 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
+TopCountry <- TopCountry[!duplicated(TopCountry$Title), ] # need to fix this
+
 unique_words_ratio <- function(song_lyrics) {
   # make lyrics into single words
   token_lyrics <- song_lyrics %>%
@@ -124,15 +126,15 @@ generate_title_repetition_column <- function(song_df) {
 
 title_repetition_df_TopCountry <- generate_title_repetition_column(TopCountry)
 
-
-title_repeats_graph <-ggplot(title_repetition_df, aes(x = Year, y = Repeats)) +
+title_repeats_graph <-ggplot(title_repetition_df_TopCountry, aes(x = Year, y = repeats)) +
   geom_point(position = position_jitter(width = 0.1), size = 0.75) +
   geom_smooth(method = "lm",se = FALSE) +
   labs(title = "Average Title Repeats Over Time",
        x = "Year",
        y = "Mean Title Repeats") +
   theme_minimal() +
-  scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(title_repetition_df$Repeats), by = 5))
+  scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(title_repetition_df$Repeats), by = 5)) +
+  theme(plot.title = element_text(hjust = 0.5)) 
 
 title_repeats_graph
 
