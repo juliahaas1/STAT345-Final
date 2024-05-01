@@ -71,34 +71,11 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
  
- 
-unique_words_ratio <- function(song_lyrics) {
-  # make lyrics into single words
-  token_lyrics <- song_lyrics %>%
-    unnest_tokens(words, lyrics) 
-  
-  # find total number of words, then number of unique words  
-  total_words <-nrow(token_lyrics)
-  unique_words <- token_lyrics %>%
-    distinct(words) %>%
-    nrow()
-  
-  #calculate ratio of unique words compared to all words
-  ratio <- unique_words / total_words
-
-  cat("Total number of words:", total_words, "\n")
-  cat("Number of unique words:", unique_words, "\n")
-  cat("Ratio of unique words to total words:", ratio, "\n")
-  
-}
-
-# overall_unique_words_ratio <-unique_words_ratio(TopCountry)
-
-
 # Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame.
 # The function inputs: The input of this function is a data frame, which must have columns with "year" and "lyrics".
 # The function output: The function return a data frame with columns of year, total words, unique words, and unique ratio.
-unique_words_ratio_by_year <- function(song_df) {
+
+generate_unique_ratios <- function(song_df) {
   # make lyrics into single words using tidytext package
   token_lyrics <- song_df %>%
     unnest_tokens(words, lyrics) %>%
@@ -111,21 +88,28 @@ unique_words_ratio_by_year <- function(song_df) {
               unique_words = n_distinct(words), # find unique words using dplyr (n_distincy)
               ratio = unique_words / total_words) # find ratio of unique words to total words
   
+  overall_unique_words_ratio <- mean(unique_words_by_year$ratio)
   
+  return(overall_unique_words_ratio)
   return(unique_words_by_year)
 }
-unique_words_ratio_by_year <- unique_words_ratio_by_year(TopCountry)
+
+unique_words_ratio<- generate_unique_ratios(TopCountry)
+unique_words_ratio
 # low ratio means songs are more repetitive
 
 # create graph showing how the unqiue ratio has changed over time:
-unique_ratio_graph_by_year <-
-  ggplot(unique_words_ratio_by_year, aes(x = Year, y = ratio)) +
-  geom_line() +
-  labs(title = "Unique Words Ratio Over Time",
-       x = "Year",
-       y = "Unique Words Ratio") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5)) 
+# unique_ratio_graph_by_year <-
+#   ggplot(unique_words_ratio, aes(x = Year, y = ratio)) +
+#   geom_line() +
+#   labs(title = "Unique Words Ratio Over Time",
+#        x = "Year",
+#        y = "Unique Words Ratio") +
+#   theme(plot.title = element_text(hjust = 0.5)) +
+#   theme_minimal()
+# 
+# unique_ratio_graph_by_year + geom_hline(yintercept = overall_unique_words_ratio)
+
 
 ```
 
