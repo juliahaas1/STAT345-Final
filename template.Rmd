@@ -44,9 +44,6 @@ ave_title_repeats
 res2<-lm(AveTotalRepeats~Year, total_repeats_by_year)
 summary(res2)
 
-plot(total_repeats_by_year$Year, total_repeats_by_year$AveTotalRepeats)
-abline(res2)
-
 #the linear model fits the data a lot better here, R^2= .5568, year explains about 56% of the variability in data. 
 
 ```
