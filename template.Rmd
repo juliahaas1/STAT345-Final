@@ -147,19 +147,19 @@ countylivin <- c("cowboy", "horse", "truck", "pickup", "road", "tea", "tractor",
 town <- c("small town", "hometown", "back home", "home", "village", "community", "neighborhood", "suburb", "township", "locality", "settlement")
 swear <- c("hell", "damn", "fuck", "bitch", "bitch", "ass", "asshole", "bastard", "shit", "bloody", "hellfire", "motherfucker", "crap", "piss", "bollocks", "wanker", "bugger")
 
-alcohol_count <- 0
-intimacy_count <- 0
-family_count <- 0
-drugs_count <- 0
-guns_count <- 0
-music_count <- 0
-sad_count <- 0
-countylivin_count <- 0
-town_count <- 0
-swear_count <- 0
+  alcohol_count <- 0
+  intimacy_count <- 0
+  family_count <- 0
+  drugs_count <- 0
+  guns_count <- 0
+  music_count <- 0
+  sad_count <- 0
+  countylivin_count <- 0
+  town_count <- 0
+  swear_count <- 0
 
 # Loop through each row of the lyrics column in Topsongs2
-for (lyric in TopSongs2$lyrics) {
+for (lyric in TopCountry$lyrics) {
   # Check if any word from each vector is present in the lyrics
   if (any(grepl(paste(alcohol, collapse = "|"), lyric, ignore.case = TRUE))) {
     alcohol_count <- alcohol_count + 1
