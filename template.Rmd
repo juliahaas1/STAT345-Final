@@ -12,40 +12,47 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Section One Julia
 
 ```{r student1}
-library(rvest)
-
-#get rid of the dashes and make them spaces
-TopSongs3$Title <- gsub("-", " ", TopSongs3$Title)
-TopSongs3$Artist <- gsub("-", " ", TopSongs3$Artist)
-
-#change title and artist to all lower case
-TopSongs3$Title<-tolower(TopSongs3$Title)
-TopSongs3$Artist<-tolower(TopSongs3$Artist)
 
 
-#save it as a csv file to working directory
-write.csv(TopSongs3, "TopCountry.csv", row.names = FALSE)
+#TESSA PLOT 1
+unique_ratio_graph_by_year
 
-#call it to test that it works and reads it correctly
-TopCountry<-read.csv("TopCountry.csv")
-
-
-
-
-#Look at years 1958 through 1968
-decade1 <- TopCountry$Year >= 1958 & TopCountry$Year <= 1968
-decade1data <- TopCountry[decade1, ]
-
-# Load required libraries
-library(tm) # for text mining
-library(topicmodels) # for topic modeling
+#what was happening in 1960?
+filter(TopCountry, Year==1960)
+#3 songs in our dataset with Year = 1960: "He'll have you go", "please Im falling", "alabam"
 
 
-# Create a document-term matrix (DTM) for topic modeling
-corpus <- Corpus(VectorSource(decade1data$lyrics))
-corpus <- tm_map(corpus, removeWords, stopwords("english"))
+#TESSA PLOT 2
+title_repeats_graph
 
-result %>% top_n(20, Frequency)
+#how well does the linear model explain the trend in the plots?
+res<-lm(repeats~Year, title_repetition_df_TopCountry)
+summary(res)
+#from the summary data, the line is a poor representation of the relationship in the data.
+
+
+#what about looking for averages per year?
+total_repeats_by_year<- title_repetition_df_TopCountry %>%
+  group_by(Year) %>%
+  summarize(AveTotalRepeats=ave(repeats))
+
+#ggplot data
+ave_title_repeats<-ggplot(total_repeats_by_year, aes(x = Year, y = AveTotalRepeats)) +
+  geom_point( size = 1.2) +
+  geom_smooth(method = "lm",se = FALSE, color="skyblue3") +
+  labs(title = "Average Title Repeats Over Time",
+       x = "Year",
+       y = "Mean Title Repeats Per Year") +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(total_repeats_by_year$AveTotalRepeats), by = 5)) + theme(plot.title = element_text(hjust = 0.5)) 
+ave_title_repeats
+
+#look at linear model
+res2<-lm(AveTotalRepeats~Year, total_repeats_by_year)
+summary(res2)
+
+#the linear model fits the data a lot better here, R^2= .5568, year explains about 56% of the variability in data. 
+
 ```
 
 
