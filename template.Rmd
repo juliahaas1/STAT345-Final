@@ -143,17 +143,6 @@ generate_title_repetition_column <- function(song_df) {
  
 title_repetition_df_TopCountry <- generate_title_repetition_column(TopCountry)
 
-title_repeats_graph <-ggplot(title_repetition_df_TopCountry, aes(x = Year, y = repeats)) +
-  geom_point(position = position_jitter(width = 0.1), size = 0.75) +
-  geom_smooth(method = "lm",se = FALSE) +
-  labs(title = "Average Title Repeats Over Time",
-       x = "Year",
-       y = "Mean Title Repeats") +
-  theme_minimal() +
-  # scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(title_repetition_df_TopCountry$Repeats), by = 5)) +
-  theme(plot.title = element_text(hjust = 0.5)) 
-
-
 ```
 
 
@@ -214,19 +203,19 @@ countylivin <- c("cowboy", "horse", "truck", "pickup", "road", "tea", "tractor",
 town <- c("small town", "hometown", "back home", "home", "village", "community", "neighborhood", "suburb", "township", "locality", "settlement")
 swear <- c("hell", "damn", "fuck", "bitch", "bitch", "ass", "asshole", "bastard", "shit", "bloody", "hellfire", "motherfucker", "crap", "piss", "bollocks", "wanker", "bugger")
 
-alcohol_count <- 0
-intimacy_count <- 0
-family_count <- 0
-drugs_count <- 0
-guns_count <- 0
-music_count <- 0
-sad_count <- 0
-countylivin_count <- 0
-town_count <- 0
-swear_count <- 0
+  alcohol_count <- 0
+  intimacy_count <- 0
+  family_count <- 0
+  drugs_count <- 0
+  guns_count <- 0
+  music_count <- 0
+  sad_count <- 0
+  countylivin_count <- 0
+  town_count <- 0
+  swear_count <- 0
 
 # Loop through each row of the lyrics column in Topsongs2
-for (lyric in TopSongs2$lyrics) {
+for (lyric in TopCountry$lyrics) {
   # Check if any word from each vector is present in the lyrics
   if (any(grepl(paste(alcohol, collapse = "|"), lyric, ignore.case = TRUE))) {
     alcohol_count <- alcohol_count + 1
@@ -272,6 +261,7 @@ ggplot(total_counts, aes(x = vector, y = count)) +
   geom_bar(stat = "identity") +
   labs(x = "Vector", y = "Total Count of Songs") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
 
 
