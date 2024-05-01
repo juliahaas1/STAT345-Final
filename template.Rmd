@@ -95,6 +95,7 @@ unique_ratio_graph_by_year <-
   theme_minimal()
 
 unique_ratio_graph_by_year <- unique_ratio_graph_by_year + geom_hline(yintercept = mean_unique_words_ratio, color = "skyblue3")
+unique_ratio_graph_by_year
 
 
 ```
