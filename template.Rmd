@@ -40,13 +40,13 @@ ave_title_repeats
 
 
 #inspect linear model and observe summary statistics
-res2<-lm(AveTotalRepeats~Year, total_repeats_by_year)
+res2<-lm(AveTitleRepeats~Year, ave_title_repeats_by_year)
 summary(res2)
 
 
 
 
-#the linear model fits the data a lot better here, R^2= .5568, year explains about 56% of the variability in data. 
+#the linear model fits the data a lot better here, R^2= 0.3174, year explains about 32% of the variability in data. 
 ```
 
 
