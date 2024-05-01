@@ -12,49 +12,41 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Section One Julia
 
 ```{r student1}
-
-
-#TESSA PLOT 1
-
-unique_ratio_graph_by_year <-
-  ggplot(unique_words_ratio, aes(x = Year, y = ratio)) +
-  geom_line() +
-  labs(title = "Unique Words Ratio Over Time",
-       x = "Year",
-       y = "Unique Words Ratio") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5))  + geom_hline(yintercept = mean(unique_words_ratio$ratio))
-
-
+#first plot look into info
 #what was happening in 1960?
 filter(TopCountry, Year==1960)
 #3 songs in our dataset with Year = 1960: "He'll have you go", "please Im falling", "alabam"
 
 
-#what about looking for averages per year?
-total_repeats_by_year<- title_repetition_df_TopCountry %>%
-  group_by(Year) %>%
-  summarize(Year, AveTotalRepeats=ave(repeats)) %>%
-  unique()
-  
 
-#ggplot data
-ave_title_repeats<-ggplot(total_repeats_by_year, aes(x = Year, y = AveTotalRepeats)) +
+
+#create table with average title repeats within each song per year
+ave_title_repeats_by_year<- title_repetition_df_TopCountry %>%
+  group_by(Year) %>%
+  summarize(Year, AveTitleRepeats=ave(repeats)) %>%
+  unique()
+
+  
+#plot data by year
+#include linear model of relationship between year and average repetition
+ave_title_repeats<-ggplot(ave_title_repeats_by_year, aes(x = Year, y = AveTitleRepeats)) +
   geom_point( size = 1.2) +
   geom_smooth(method = "lm",se = FALSE, color="skyblue3") +
   labs(title = "Average Title Repeats Over Time",
        x = "Year",
        y = "Mean Title Repeats Per Year") +
-  theme_minimal() + scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(total_repeats_by_year$AveTotalRepeats), by = 5)) + theme(plot.title = element_text(hjust = 0.5)) 
+  theme_minimal() + scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(ave_title_repeats_by_year$AveTitleRepeats), by = 5)) + theme(plot.title = element_text(hjust = 0.5)) 
 ave_title_repeats
 
-ave_title_repeats
-#look at linear model
+
+#inspect linear model and observe summary statistics
 res2<-lm(AveTotalRepeats~Year, total_repeats_by_year)
 summary(res2)
 
-#the linear model fits the data a lot better here, R^2= .5568, year explains about 56% of the variability in data. 
 
+
+
+#the linear model fits the data a lot better here, R^2= .5568, year explains about 56% of the variability in data. 
 ```
 
 
