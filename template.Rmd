@@ -146,7 +146,7 @@ generate_title_repetition_column <- function(song_df) {
   }
   return(song_df)
 }
-
+ 
 title_repetition_df_TopCountry <- generate_title_repetition_column(TopCountry)
 
 title_repeats_graph <-ggplot(title_repetition_df_TopCountry, aes(x = Year, y = repeats)) +
