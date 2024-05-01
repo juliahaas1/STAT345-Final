@@ -34,7 +34,8 @@ summary(res)
 #what about looking for averages per year?
 total_repeats_by_year<- title_repetition_df_TopCountry %>%
   group_by(Year) %>%
-  summarize(AveTotalRepeats=ave(repeats))
+  summarize(Year, AveTotalRepeats=ave(repeats)) %>%
+  unique()
 
 #ggplot data
 ave_title_repeats<-ggplot(total_repeats_by_year, aes(x = Year, y = AveTotalRepeats)) +
