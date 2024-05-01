@@ -74,28 +74,27 @@ generate_unique_ratios <- function(song_df) {
     summarise(total_words = n(), # find total words
               unique_words = n_distinct(words), # find unique words using dplyr (n_distincy)
               ratio = unique_words / total_words) # find ratio of unique words to total words
-  
-  overall_unique_words_ratio <- mean(unique_words_by_year$ratio)
-  
-  return(overall_unique_words_ratio)
+
   return(unique_words_by_year)
 }
 
-unique_words_ratio<- generate_unique_ratios(TopCountry)
-unique_words_ratio
+unique_words_ratios <- generate_unique_ratios(TopCountry)
 # low ratio means songs are more repetitive
+mean_unique_words_ratio <-mean(unique_words_ratio$ratio)
+mean_unique_words_ratio
 
-# create graph showing how the unqiue ratio has changed over time:
-# unique_ratio_graph_by_year <-
-#   ggplot(unique_words_ratio, aes(x = Year, y = ratio)) +
-#   geom_line() +
-#   labs(title = "Unique Words Ratio Over Time",
-#        x = "Year",
-#        y = "Unique Words Ratio") +
-#   theme(plot.title = element_text(hjust = 0.5)) +
-#   theme_minimal()
-# 
-# unique_ratio_graph_by_year + geom_hline(yintercept = overall_unique_words_ratio)
+
+# create graph showing how the unique ratio has changed over time:
+unique_ratio_graph_by_year <-
+  ggplot(unique_words_ratio, aes(x = Year, y = ratio)) +
+  geom_line() +
+  labs(title = "Unique Words Ratio Over Time",
+       x = "Year",
+       y = "Unique Words Ratio") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_minimal()
+
+unique_ratio_graph_by_year + geom_hline(yintercept = mean_unique_words_ratio)
 
 
 ```
