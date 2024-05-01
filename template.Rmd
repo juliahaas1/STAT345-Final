@@ -16,7 +16,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #TESSA PLOT 1
 
-
 unique_ratio_graph_by_year <-
   ggplot(unique_words_ratio, aes(x = Year, y = ratio)) +
   geom_line() +
@@ -27,13 +26,9 @@ unique_ratio_graph_by_year <-
   theme(plot.title = element_text(hjust = 0.5))  + geom_hline(yintercept = mean(unique_words_ratio$ratio))
 
 
-
-
-
 #what was happening in 1960?
 filter(TopCountry, Year==1960)
 #3 songs in our dataset with Year = 1960: "He'll have you go", "please Im falling", "alabam"
-
 
 
 #what about looking for averages per year?
@@ -41,6 +36,7 @@ total_repeats_by_year<- title_repetition_df_TopCountry %>%
   group_by(Year) %>%
   summarize(Year, AveTotalRepeats=ave(repeats)) %>%
   unique()
+  
 
 #ggplot data
 ave_title_repeats<-ggplot(total_repeats_by_year, aes(x = Year, y = AveTotalRepeats)) +
