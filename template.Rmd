@@ -405,10 +405,9 @@ TopSongs3 <- subset(TopSongs3, !(is.na(lyrics) | lyrics == ""))
 TopSongs3 <- subset(TopSongs3, !grepl("we do not have the lyrics for", lyrics))
 
 
-
 ##JULIA###
 #getting rid of duplicate songs
-unique <- TopSongs3[!duplicated(TopSongs3$Title), ]
+TopSongs3 <- TopSongs3[!duplicated(TopSongs3$Title), ]
 
 #get rid of the dashes and make them spaces
 TopSongs3$Title <- gsub("-", " ", TopSongs3$Title)
