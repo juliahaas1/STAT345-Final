@@ -65,7 +65,7 @@ library(tidytext)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-
+ 
 TopCountry <- TopCountry[!duplicated(TopCountry$Title), ] # need to fix this
 
 unique_words_ratio <- function(song_lyrics) {
