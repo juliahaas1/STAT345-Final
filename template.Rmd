@@ -65,7 +65,7 @@ library(tidytext)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-
+ 
 TopCountry <- TopCountry[!duplicated(TopCountry$Title), ] # need to fix this
 
 unique_words_ratio <- function(song_lyrics) {
@@ -88,7 +88,7 @@ unique_words_ratio <- function(song_lyrics) {
   
 }
 
-overall_unique_words_ratio <-unique_words_ratio(TopCountry)
+# overall_unique_words_ratio <-unique_words_ratio(TopCountry)
 
 
 # Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame.
@@ -123,8 +123,6 @@ unique_ratio_graph_by_year <-
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5)) 
 
-unique_ratio_graph_by_year
-
 ```
 
 ```{r}
@@ -148,7 +146,7 @@ generate_title_repetition_column <- function(song_df) {
   }
   return(song_df)
 }
-
+ 
 title_repetition_df_TopCountry <- generate_title_repetition_column(TopCountry)
 
 title_repeats_graph <-ggplot(title_repetition_df_TopCountry, aes(x = Year, y = repeats)) +
@@ -158,10 +156,9 @@ title_repeats_graph <-ggplot(title_repetition_df_TopCountry, aes(x = Year, y = r
        x = "Year",
        y = "Mean Title Repeats") +
   theme_minimal() +
-  scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(title_repetition_df$Repeats), by = 5)) +
+  # scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(title_repetition_df_TopCountry$Repeats), by = 5)) +
   theme(plot.title = element_text(hjust = 0.5)) 
 
-title_repeats_graph
 
 ```
 
@@ -423,6 +420,7 @@ write.csv(TopSongs3, "TopCountry.csv", row.names = FALSE)
 
 #call it to test that it works and reads it correctly
 TopCountry<-read.csv("TopCountry.csv")
+
 
 ```
 
