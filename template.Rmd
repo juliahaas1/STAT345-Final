@@ -249,6 +249,7 @@ ggplot(total_counts, aes(x = vector, y = count)) +
   labs(x = "Vector", y = "Total Count of Songs") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 }
+ThemeGraph(TopCountry)
 ```
 
 
@@ -388,65 +389,4 @@ TopCountry<-read.csv("TopCountry.csv")
 
 ```
 
-RAP CODE
-```{r}
-
-urlfunctionRap <- function(year) {
-  if (year >= 2007 && year <= 2023) {
-      country_url <- paste0("https://en.wikipedia.org/wiki/List_of_number-one_R%26B/hip-hop_songs_of_", year, "_(U.S.)")
-      html <- read_html(country_url)
-      cast <- html_nodes(html, "th , .plainrowheaders td")
-      html_text(cast, trim = TRUE) 
-      tables <- html_table(html, fill = TRUE, header = TRUE)
-      desired_table <- tables[[2]]
-      desired_table <- desired_table[, -1]
-      
-  }else {
-      country_url <- paste0("https://en.wikipedia.org/wiki/", year, "_in_hip_hop_music")
-      html <- read_html(country_url)
-      cast <- html_nodes(html, ".headerSort , .jquery-tablesorter td, .headerSort") 
-      html_text(cast, trim = TRUE) 
-      tables <- html_table(html, fill = TRUE, header = TRUE)
-      desired_table <- tables[[6]]
-  }
-
-  colnames(desired_table) <- c("Title", "Artist")
-    #name columns
-  desired_table$Year <- year
-     #add columns for year
-  desired_table$genre <- "Rap" 
-     #add column for genre
-  desired_table <- unique(desired_table)
-
-return(desired_table)
-}
-TopRapSongs <- rbindlist(lapply(1987:2023, urlfunctionRap), fill = TRUE)
-TopRapSongs <- TopRapSongs[,c(1,2,5,6), drop = FALSE]
-TopRapSongs <- unique(TopRapSongs)
-DFTopRapSongs <- as.data.frame(TopRapSongs)
-filter_titles <- function(df) {
-  df[grep("^\"", df$Title), ]
-}
-
-DFTopRapSongs <- filter_titles(DFTopRapSongs)
-DFTopRapSongs$Title<-gsub('"', '', DFTopRapSongs$Title)
-DFTopRapSongs <- sapply(DFTopRapSongs, function(x) gsub(" ", "-", x))
-DFTopRapSongs <- as.data.frame(DFTopRapSongs)
-DFTopRapSongs$Title <- sub("-$", "", DFTopRapSongs$Title)
-DFTopRapSongs$Title <- gsub("[,.?%()]", "", DFTopRapSongs$Title)
-DFTopRapSongs$Artist <- gsub("[.']", "", DFTopRapSongs$Artist)
-DFTopRapSongs$Artist <- sub("-and", "", DFTopRapSongs$Artist)
-
-LyricsTopRapSongs3 <- scrape_lyrics(DFTopRapSongs)
-
-# Modifies song lyrics to match
-LyricsTopRapSongs3$lyrics <- gsub("\n", " ", LyricsTopRapSongs3$lyrics)
-LyricsTopRapSongs3$lyrics <- gsub("[,.()]", "", LyricsTopRapSongs3$lyrics)
-LyricsTopRapSongs3$lyrics <- tolower(LyricsTopRapSongs3$lyrics)
-# Remove rows with missing lyrics
-LyricsTopRapSongs3 <- subset(LyricsTopRapSongs3, !(is.na(lyrics) | lyrics == ""))
-LyricsTopRapSongs3 <- subset(LyricsTopRapSongs3, !grepl("we do not have the lyrics for", lyrics))
-
-write.csv(LyricsTopRapSongs3, "TopRapSongs.csv", row.names = FALSE)
-TopRapSongsCSV <-read.csv("TopRapSongs.csv")
 
