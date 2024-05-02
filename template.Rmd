@@ -18,34 +18,6 @@ filter(TopCountry, Year==1960)
 #3 songs in our dataset with Year = 1960: "He'll have you go", "please Im falling", "alabam"
 
 
-
-
-#create table with average title repeats within each song per year
-ave_title_repeats_by_year<- title_repetition_df_TopCountry %>%
-  group_by(Year) %>%
-  summarize(Year, AveTitleRepeats=ave(repeats)) %>%
-  unique()
-
-  
-#plot data by year
-#include linear model of relationship between year and average repetition
-ave_title_repeats<-ggplot(ave_title_repeats_by_year, aes(x = Year, y = AveTitleRepeats)) +
-  geom_point( size = 1.2) +
-  geom_smooth(method = "lm",se = FALSE, color="skyblue3") +
-  labs(title = "Average Title Repeats Over Time",
-       x = "Year",
-       y = "Mean Title Repeats Per Year") +
-  theme_minimal() + scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(ave_title_repeats_by_year$AveTitleRepeats), by = 5)) + theme(plot.title = element_text(hjust = 0.5)) 
-ave_title_repeats
-
-
-#inspect linear model and observe summary statistics
-res2<-lm(AveTitleRepeats~Year, ave_title_repeats_by_year)
-summary(res2)
-
-
-
-
 #the linear model fits the data a lot better here, R^2= 0.3174, year explains about 32% of the variability in data. 
 ```
 
