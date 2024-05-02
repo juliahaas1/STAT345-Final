@@ -12,20 +12,124 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Section One Julia
 
 ```{r student1}
-#first plot look into info
+
+
+#TESSA PLOT 1
+unique_ratio_graph_by_year
+
 #what was happening in 1960?
 filter(TopCountry, Year==1960)
 #3 songs in our dataset with Year = 1960: "He'll have you go", "please Im falling", "alabam"
 
 
+<<<<<<< HEAD
 #the linear model fits the data a lot better here, R^2= 0.3174, year explains about 32% of the variability in data. 
+=======
+
+#what about looking for averages per year?
+total_repeats_by_year<- title_repetition_df_TopCountry %>%
+  group_by(Year) %>%
+  summarize(Year, AveTotalRepeats=ave(repeats)) %>%
+  unique()
+
+#ggplot data
+ave_title_repeats<-ggplot(total_repeats_by_year, aes(x = Year, y = AveTotalRepeats)) +
+  geom_point( size = 1.2) +
+  geom_smooth(method = "lm",se = FALSE, color="skyblue3") +
+  labs(title = "Average Title Repeats Over Time",
+       x = "Year",
+       y = "Mean Title Repeats Per Year") +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(total_repeats_by_year$AveTotalRepeats), by = 5)) + theme(plot.title = element_text(hjust = 0.5)) 
+ave_title_repeats
+
+#look at linear model
+res2<-lm(AveTotalRepeats~Year, total_repeats_by_year)
+summary(res2)
+
+#the linear model fits the data a lot better here, R^2= .5568, year explains about 56% of the variability in data. 
+
+>>>>>>> 2682200dc9ffee34998ef1fce148f1bb035e26c7
 ```
 
 
 ## Section Two Tessa
 ```{r student2}
+library(rvest)
+library(stringr)
+library(tidytext)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+ 
+# Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame.
+# The function inputs: The input of this function is a data frame, which must have columns with "year" and "lyrics".
+# The function output: The function return a data frame with columns of year, total words, unique words, and unique ratio.
+
+generate_unique_ratios <- function(song_df) {
+  # make lyrics into single words using tidytext package
+  token_lyrics <- song_df %>%
+    unnest_tokens(words, lyrics) %>%
+    mutate(Year = Year)  # include year data
+  
+  # Group by year and calculate unique words ratio
+  unique_words_by_year <- token_lyrics %>% 
+    group_by(Year) %>%  # group lyrics by year
+    summarise(total_words = n(), # find total words
+              unique_words = n_distinct(words), # find unique words using dplyr (n_distincy)
+              ratio = unique_words / total_words) # find ratio of unique words to total words
+
+  return(unique_words_by_year)
+}
+
+unique_words_ratios <- generate_unique_ratios(TopCountry)
+# low ratio means songs are more repetitive
+mean_unique_words_ratio <-mean(unique_words_ratios$ratio)
+mean_unique_words_ratio
+
+
+# create graph showing how the unique ratio has changed over time:
+unique_ratio_graph_by_year <-
+  ggplot(unique_words_ratios, aes(x = Year, y = ratio)) +
+  geom_line() +
+  labs(title = "Unique Words Ratio Over Time",
+       x = "Year",
+       y = "Unique Words Ratio") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_minimal()
+
+unique_ratio_graph_by_year <- unique_ratio_graph_by_year + geom_hline(yintercept = mean_unique_words_ratio, color = "skyblue3")
+unique_ratio_graph_by_year
+
 
 ```
+
+```{r}
+# Purpose: To find the number of times a song repeats its title within its own lyrics. Then add the frequency of repeats to the inputted data frame.
+# The function inputs: The input of this function is a data frame, which must have columns with "Title" and "lyrics".
+# The function output: The function returns the inputted data frame, along with a column called repeats.
+generate_title_repetition_column <- function(song_df) {
+  # Initialize empty column called repeats to hold frquency
+  song_df$repeats <- numeric(nrow(song_df))
+  
+  # for each row in inputted data frame:
+  for (i in 1:nrow(song_df)) { 
+    title <- song_df$Title[i]  # extract title 
+    lyrics <- song_df$lyrics[i] # extract lyrics
+    
+    # sum number of times the title is in the lyrics
+    title_count <- sum(gregexpr(title, lyrics)[[1]] > 0) 
+    
+    # add repeats count to the existing data frame
+    song_df$repeats[i] <- title_count
+  }
+  return(song_df)
+}
+ 
+title_repetition_df_TopCountry <- generate_title_repetition_column(TopCountry)
+
+```
+
 
 
 ## Section Three Eva
@@ -83,6 +187,7 @@ sad <- c("heartbreak", "sorrow", "grief", "despair", "melancholy", "misery", "an
 countylivin <- c("cowboy", "horse", "truck", "pickup", "road", "tea", "tractor", "barn", "ranch", "cattle", "hay", "pasture", "cowboy boots", "western", "yeehaw", "rodeo")
 town <- c("small town", "hometown", "back home", "home", "village", "community", "neighborhood", "suburb", "township", "locality", "settlement")
 swear <- c("hell", "damn", "fuck", "bitch", "bitch", "ass", "asshole", "bastard", "shit", "bloody", "hellfire", "motherfucker", "crap", "piss", "bollocks", "wanker", "bugger")
+violence <- c("violence", "fight", "attack", "assault", "battle", "war", "weapon", "blood", "kill", "murder", "homicide", "gun", "knife", "bullet", "shot", "stab", "punch", "strangle", "choke", "brutal", "beating", "injure", "wound", "trauma", "hurt", "pain", "suffering", "death", "hit")
 
   alcohol_count <- 0
   intimacy_count <- 0
@@ -94,9 +199,11 @@ swear <- c("hell", "damn", "fuck", "bitch", "bitch", "ass", "asshole", "bastard"
   countylivin_count <- 0
   town_count <- 0
   swear_count <- 0
+  violence_count <- 0
 
+ThemeGraph <- function(TopGenre) {
 # Loop through each row of the lyrics column in Topsongs2
-for (lyric in TopCountry$lyrics) {
+for (lyric in TopGenre$lyrics) {
   # Check if any word from each vector is present in the lyrics
   if (any(grepl(paste(alcohol, collapse = "|"), lyric, ignore.case = TRUE))) {
     alcohol_count <- alcohol_count + 1
@@ -128,12 +235,15 @@ for (lyric in TopCountry$lyrics) {
   if (any(grepl(paste(swear, collapse = "|"), lyric, ignore.case = TRUE))) {
     swear_count <- swear_count + 1
   }
+  if (any(grepl(paste(violence, collapse = "|"), lyric, ignore.case = TRUE))) {
+    violence_count <- violence_count + 1
+  }
 }
 
 # Create a data frame to store the counts
 total_counts <- data.frame(
-  vector = c("Alcohol", "Intimacy", "Family", "Drugs", "Guns", "Music", "Sad", "Country Living", "Town", "Swear"),
-  count = c(alcohol_count, intimacy_count, family_count, drugs_count, guns_count, music_count, sad_count, countylivin_count, town_count, swear_count)
+  vector = c("Alcohol", "Intimacy", "Family", "Drugs", "Guns", "Music", "Sad", "Country Living", "Town", "Swear", "Violence"),
+  count = c(alcohol_count, intimacy_count, family_count, drugs_count, guns_count, music_count, sad_count, countylivin_count, town_count, swear_count, violence_count)
 )
 
 
@@ -142,7 +252,9 @@ ggplot(total_counts, aes(x = vector, y = count)) +
   geom_bar(stat = "identity") +
   labs(x = "Vector", y = "Total Count of Songs") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
+}
+ThemeGraph(TopRapSongsCSV)
+ThemeGraph(TopCountry)
 ```
 
 
@@ -282,110 +394,66 @@ TopCountry<-read.csv("TopCountry.csv")
 
 ```
 
+RAP CODE 
 ```{r}
-# TESSA - UNIQUE RATIO FUNCTION WITH GRAPH
-library(rvest)
-library(stringr)
-library(tidytext)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
- 
-# Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame.
-# The function inputs: The input of this function is a data frame, which must have columns with "year" and "lyrics".
-# The function output: The function return a data frame with columns of year, total words, unique words, and unique ratio.
-generate_unique_ratios <- function(song_df) {
-  # make lyrics into single words using tidytext package
-  token_lyrics <- song_df %>%
-    unnest_tokens(words, lyrics) %>%
-    mutate(Year = Year)  # include year data
-  
-  # Group by year and calculate unique words ratio
-  unique_words_by_year <- token_lyrics %>% 
-    group_by(Year) %>%  # group lyrics by year
-    summarise(total_words = n(), # find total words
-              unique_words = n_distinct(words), # find unique words using dplyr (n_distincy)
-              ratio = unique_words / total_words) # find ratio of unique words to total words
-
-  return(unique_words_by_year)
-}
-
-# low ratio means songs are more repetitive
-unique_words_ratios <- generate_unique_ratios(TopCountry)
-
-# find the overall unique words ratio to add to graph:
-overall_unique_words_ratio <-mean(unique_words_ratios$ratio)
-
-# graph unique words ratio over the years
-unique_ratio_graph_by_year <-ggplot(unique_words_ratios, aes(x = Year, y = ratio)) +
-  geom_line() + 
-  geom_hline(yintercept = overall_unique_words_ratio, color = "skyblue3") + #add an hline to show when the data is above and below average
-  annotate("text", x = 1988.5, y = overall_unique_words_ratio + 0.01, label = "Average Unique Words Ratio", color = "skyblue3" ) +  # add label to represent what hline means
-  labs(title = "Unique Words Ratio of Top Country Songs Over Time",
-       x = "Year",
-       y = "Unique Words Ratio") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5)) # center title
-
-unique_ratio_graph_by_year
-```
-
-
-```{r}
-# TESSA - TITLE REPETITION FUNCTION
-# Purpose: To find the number of times a song repeats its title within its own lyrics. Then add the frequency of repeats to the inputted data frame.
-# The function inputs: The input of this function is a data frame, which must have columns with "Title" and "lyrics".
-# The function output: The function returns the inputted data frame, along with a column called repeats.
-generate_title_repetition_column <- function(song_df) {
-  # Initialize empty column called repeats to hold frquency
-  song_df$repeats <- numeric(nrow(song_df))
-  
-  # for each row in inputted data frame:
-  for (i in 1:nrow(song_df)) { 
-    title <- song_df$Title[i]  # extract title 
-    lyrics <- song_df$lyrics[i] # extract lyrics
-    
-    # sum number of times the title is in the lyrics
-    title_count <- sum(gregexpr(title, lyrics)[[1]] > 0) 
-    
-    # add repeats count to the existing data frame
-    song_df$repeats[i] <- title_count
+urlfunctionRap <- function(year) {
+  if (year >= 2007 && year <= 2023) {
+      country_url <- paste0("https://en.wikipedia.org/wiki/List_of_number-one_R%26B/hip-hop_songs_of_", year, "_(U.S.)")
+      html <- read_html(country_url)
+      cast <- html_nodes(html, "th , .plainrowheaders td")
+      html_text(cast, trim = TRUE) 
+      tables <- html_table(html, fill = TRUE, header = TRUE)
+      desired_table <- tables[[2]]
+      desired_table <- desired_table[, -1]
+      
+  }else {
+      country_url <- paste0("https://en.wikipedia.org/wiki/", year, "_in_hip_hop_music")
+      html <- read_html(country_url)
+      cast <- html_nodes(html, ".headerSort , .jquery-tablesorter td, .headerSort") 
+      html_text(cast, trim = TRUE) 
+      tables <- html_table(html, fill = TRUE, header = TRUE)
+      desired_table <- tables[[6]]
   }
-  return(song_df)
+
+  colnames(desired_table) <- c("Title", "Artist")
+    #name columns
+  desired_table$Year <- year
+     #add columns for year
+  desired_table$genre <- "Rap" 
+     #add column for genre
+  desired_table <- unique(desired_table)
+
+return(desired_table)
 }
- 
-title_repetition_df_TopCountry <- generate_title_repetition_column(TopCountry)
+fun2 <- urlfunctionRap(1987)
+TopRapSongs <- rbindlist(lapply(1987:2023, urlfunctionRap), fill = TRUE)
+TopRapSongs <- TopRapSongs[,c(1,2,5,6), drop = FALSE]
+TopRapSongs <- unique(TopRapSongs)
+DFTopRapSongs <- as.data.frame(TopRapSongs)
+filter_titles <- function(df) {
+  df[grep("^\"", df$Title), ]
+}
 
-####JULIA - ADD BETTER GRAPH AND CODE FOR TITLE REPETITON:
+# Apply the function to TopRapSongs
+DFTopRapSongs <- filter_titles(DFTopRapSongs)
+DFTopRapSongs$Title<-gsub('"', '', DFTopRapSongs$Title)
+DFTopRapSongs <- sapply(DFTopRapSongs, function(x) gsub(" ", "-", x))
+DFTopRapSongs <- as.data.frame(DFTopRapSongs)
+DFTopRapSongs$Title <- sub("-$", "", DFTopRapSongs$Title)
+DFTopRapSongs$Title <- gsub("[,.?%()]", "", DFTopRapSongs$Title)
+DFTopRapSongs$Artist <- gsub("[.']", "", DFTopRapSongs$Artist)
+DFTopRapSongs$Artist <- sub("-and", "", DFTopRapSongs$Artist)
 
-#create table with average title repeats within each song per year
-ave_title_repeats_by_year<- title_repetition_df_TopCountry %>%
-  group_by(Year) %>%
-  summarize(Year, AveTitleRepeats=ave(repeats)) %>%
-  unique()
+LyricsTopRapSongs3 <- scrape_lyrics(DFTopRapSongs)
 
-  
-#plot data by year
-#include linear model of relationship between year and average repetition
-ave_title_repeats<-ggplot(ave_title_repeats_by_year, aes(x = Year, y = AveTitleRepeats)) +
-  geom_point( size = 1.2) +
-  geom_smooth(method = "lm",se = FALSE, color="skyblue3") +
-  labs(title = "Average Title Repeats Over Time",
-       x = "Year",
-       y = "Mean Title Repeats Per Year") +
-  theme_minimal() + scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(ave_title_repeats_by_year$AveTitleRepeats), by = 5)) + theme(plot.title = element_text(hjust = 0.5)) 
-ave_title_repeats
+# Modifies song lyrics to match
+LyricsTopRapSongs3$lyrics <- gsub("\n", " ", LyricsTopRapSongs3$lyrics)
+LyricsTopRapSongs3$lyrics <- gsub("[,.()]", "", LyricsTopRapSongs3$lyrics)
+LyricsTopRapSongs3$lyrics <- tolower(LyricsTopRapSongs3$lyrics)
+# Remove rows with missing lyrics
+LyricsTopRapSongs3 <- subset(LyricsTopRapSongs3, !(is.na(lyrics) | lyrics == ""))
+LyricsTopRapSongs3 <- subset(LyricsTopRapSongs3, !grepl("we do not have the lyrics for", lyrics))
 
-
-#inspect linear model and observe summary statistics
-res2<-lm(AveTitleRepeats~Year, ave_title_repeats_by_year)
-summary(res2)
-
-
+write.csv(LyricsTopRapSongs3, "TopRapSongs.csv", row.names = FALSE)
+TopRapSongsCSV <-read.csv("TopRapSongs.csv")
 ```
-
-
-
-
-
-
