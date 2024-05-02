@@ -303,8 +303,13 @@ urlfunctionRap <- function(year) {
       cast <- html_nodes(html, ".headerSort , .jquery-tablesorter td, .headerSort") 
       html_text(cast, trim = TRUE) 
       tables <- html_table(html, fill = TRUE, header = TRUE)
-      desired_table <- tables[[6]]
+      if (year == 2000 || year >= 2002) {
+        desired_table <- tables[[5]]
+      }else{
+        desired_table <- tables[[6]]
+      }
   }
+  
 
   colnames(desired_table) <- c("Title", "Artist")
     #name columns
