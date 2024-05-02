@@ -13,40 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r student1}
 
-#TESSA PLOT 1
-unique_ratio_graph_by_year
-
-#what was happening in 1960?
-filter(TopCountry, Year==1960)
-#3 songs in our dataset with Year = 1960: "He'll have you go", "please Im falling", "alabam"
-
-
-#the linear model fits the data a lot better here, R^2= 0.3174, year explains about 32% of the variability in data. 
-
-#what about looking for averages per year?
-total_repeats_by_year<- title_repetition_df_TopCountry %>%
-  group_by(Year) %>%
-  summarize(Year, AveTotalRepeats=ave(repeats)) %>%
-  unique()
-
-#ggplot data
-ave_title_repeats<-ggplot(total_repeats_by_year, aes(x = Year, y = AveTotalRepeats)) +
-  geom_point( size = 1.2) +
-  geom_smooth(method = "lm",se = FALSE, color="skyblue3") +
-  labs(title = "Average Title Repeats Over Time",
-       x = "Year",
-       y = "Mean Title Repeats Per Year") +
-  theme_minimal() +
-  scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(total_repeats_by_year$AveTotalRepeats), by = 5)) + theme(plot.title = element_text(hjust = 0.5)) 
-ave_title_repeats
-
-#look at linear model
-res2<-lm(AveTotalRepeats~Year, total_repeats_by_year)
-summary(res2)
-
-#the linear model fits the data a lot better here, R^2= .5568, year explains about 56% of the variability in data. 
-
->>>>>>> 2682200dc9ffee34998ef1fce148f1bb035e26c7
 ```
 
 
