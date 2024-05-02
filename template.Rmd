@@ -18,7 +18,56 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Section Two Tessa
 ```{r student2}
+# TESSA - TITLE REPETITION FUNCTION WITH GRAPH INCLUDED
+# Purpose: To find the number of times a song repeats its title within its own lyrics. Then add the frequency of repeats to the inputted data frame. Lastly it will provide a graph of average title repeats over time with a linear regression model to see if there is a linear relationship.
+# The function inputs: The input of this function is a data frame, which must have columns with "Title", "Year", and "lyrics".
+# The function output: The function returns the inputted data frame, along with a column called repeats. It will print out a graph showing average title repeats over time with a fitted linear regression model. It will also output some summary statistics of the fitted model.
+generate_title_repetition_graph <- function(song_df, graph_title) {
+  # Initialize empty column called repeats to hold frquency
+  song_df$repeats <- numeric(nrow(song_df))
+  
+  # for each row in inputted data frame:
+  for (i in 1:nrow(song_df)) {
+    title <- tolower(song_df$Title[i])  # extract title
+    lyrics <- tolower(song_df$lyrics[i]) # extract lyrics
+    
+    # sum number of times the title is in the lyrics
+    title_count <- sum(gregexpr(title, lyrics)[[1]] > 0)
+    
+    # add repeats count to the existing data frame
+    song_df$repeats[i] <- title_count
+  }
+  
+  ##JULIA###
+  #create table with average title repeats within each song per year
+  ave_title_repeats_by_year <- song_df %>%
+    group_by(Year) %>%
+    summarize(AveTitleRepeats = mean(repeats))
+  
+  # plot data by year
+  ave_title_repeats <-
+    ggplot(ave_title_repeats_by_year, aes(x = Year, y = AveTitleRepeats)) +
+    geom_point(size = 1.2) +
+    geom_smooth(method = "lm", se = FALSE, color = "skyblue3") +
+    labs(title = graph_title,
+         x = "Year",
+         y = "Mean Title Repeats Per Year") +
+    theme_minimal() +
+    scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(
+      ave_title_repeats_by_year$AveTitleRepeats
+    ), by = 5)) + theme(plot.title = element_text(hjust = 0.5))
+  
+  print(ave_title_repeats)
+  
+  res2 <- lm(AveTitleRepeats ~ Year, ave_title_repeats_by_year)
+  print(summary(res2))
+  
+}
 
+Country_Title_Repetition <-generate_title_repetition_graph(TopCountry, "Average Title Repeats of Top Country Over Time")
+Country_Title_Repetition
+Rap_Title_Repetition <-generate_title_repetition_graph(TopRapSongsCSV, "Average Title Repeats of Top Rap Over Time")
+Rap_Title_Repetition
 ```
 
 
@@ -368,17 +417,20 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
  
-# Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame.
-# The function inputs: The input of this function is a data frame, which must have columns with "year" and "lyrics".
-# The function output: The function return a data frame with columns of year, total words, unique words, and unique ratio.
+
+# Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame and create a ggplot of the resulting data.
+# The function inputs: The input of this function is a data frame, which must have columns with "year" and "lyrics". It also take in graph_title which allows you to specifically name your graph.
+# The function output: The function return a data frame with columns of year, total words, unique words, and unique ratio. The function will print the graph out showing a trend of unqiue word ratio over time.
+generate_unique_ratios_graph <- function(song_df, graph_title) {
+
 generate_unique_ratios <- function(song_df) {
   # make lyrics into single words using tidytext package
   token_lyrics <- song_df %>%
     unnest_tokens(words, lyrics) %>%
     mutate(Year = Year)  # include year data
-  
+
   # Group by year and calculate unique words ratio
-  unique_words_by_year <- token_lyrics %>% 
+  unique_words_by_year <- token_lyrics %>%
     group_by(Year) %>%  # group lyrics by year
     summarise(total_words = n(), # find total words
               unique_words = n_distinct(words), # find unique words using dplyr (n_distincy)
@@ -386,26 +438,34 @@ generate_unique_ratios <- function(song_df) {
 
   return(unique_words_by_year)
 }
-
 # low ratio means songs are more repetitive
-unique_words_ratios <- generate_unique_ratios(TopCountry)
-# generate_unique_ratios(LyricsTopRapSongs3)
+unique_words_ratios <- generate_unique_ratios(song_df)
 
 # find the overall unique words ratio to add to graph:
 overall_unique_words_ratio <-mean(unique_words_ratios$ratio)
 
+# find middle of years so the label is in the middle of the graph
+x_midpoint <- median(unique_words_ratios$Year)
+
 # graph unique words ratio over the years
 unique_ratio_graph_by_year <-ggplot(unique_words_ratios, aes(x = Year, y = ratio)) +
-  geom_line() + 
+  geom_line() +
   geom_hline(yintercept = overall_unique_words_ratio, color = "skyblue3") + #add an hline to show when the data is above and below average
-  annotate("text", x = 1988.5, y = overall_unique_words_ratio + 0.01, label = "Average Unique Words Ratio", color = "skyblue3" ) +  # add label to represent what hline means
-  labs(title = "Unique Words Ratio of Top Country Songs Over Time",
+  annotate("text", x = x_midpoint, y = overall_unique_words_ratio + 0.01, label = "Average Unique Words Ratio", color = "skyblue3" ) +  # add label to represent what hline means
+  labs(title = graph_title,
        x = "Year",
        y = "Unique Words Ratio") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5)) # center title
 
-unique_ratio_graph_by_year
+return(unique_ratio_graph_by_year)
+}
+
+Country_Unique_Ratio_Graph <-generate_unique_ratios_graph(TopCountry, "Unique Words Ratio of Top Country Songs Over Time")
+Country_Unique_Ratio_Graph
+Rap_Unique_Ratio_Graph <-generate_unique_ratios_graph(TopRapSongsCSV, "Unique Words Ratio of Top Rap Songs Over Time")
+Rap_Unique_Ratio_Graph
+
 ```
 
 ## Measure of Receptiveness: Title Repetition - Tessa and Julia
@@ -434,6 +494,37 @@ generate_title_repetition_column <- function(song_df) {
  
 title_repetition_df_TopCountry <- generate_title_repetition_column(TopCountry)
 
+
+# Purpose: To create a graph of the average title repeats over time.
+# The function inputs: 
+# The function output: 
+graph_title_repetition <- function(title_repetition_df) {
+  
+  #create table with average title repeats within each song per year
+  ave_title_repeats_by_year<- title_repetition_df %>%
+  group_by(Year) %>%
+  summarize(Year, AveTitleRepeats= mean(repeats)) %>%
+  unique()
+
+ave_title_repeats<-ggplot(ave_title_repeats_by_year, aes(x = Year, y = AveTitleRepeats)) +
+  geom_point( size = 1.2) +
+  geom_smooth(method = "lm",se = FALSE, color="skyblue3") +
+  labs(title = "Average Title Repeats Over Time",
+       x = "Year",
+       y = "Mean Title Repeats Per Year") +
+  theme_minimal() + scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(ave_title_repeats_by_year$AveTitleRepeats), by = 5)) + theme(plot.title = element_text(hjust = 0.5)) 
+
+print(ave_title_repeats)
+
+res2<-lm(AveTitleRepeats~Year, ave_title_repeats_by_year)
+print(summary(res2))
+
+}
+
+graph_title_repetition(title_repetition_df_TopCountry)
+
+
+
 ####JULIA - ADD BETTER GRAPH AND CODE FOR TITLE REPETITON:
 
 #create table with average title repeats within each song per year
@@ -459,5 +550,4 @@ ave_title_repeats
 #inspect linear model and observe summary statistics
 res2<-lm(AveTitleRepeats~Year, ave_title_repeats_by_year)
 summary(res2)
-
 ```
