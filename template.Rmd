@@ -344,6 +344,9 @@ LyricsTopRapSongs3$lyrics <- tolower(LyricsTopRapSongs3$lyrics)
 # Remove rows with missing lyrics
 LyricsTopRapSongs3 <- subset(LyricsTopRapSongs3, !(is.na(lyrics) | lyrics == ""))
 LyricsTopRapSongs3 <- subset(LyricsTopRapSongs3, !grepl("we do not have the lyrics for", lyrics))
+# Remove dashes between title and artist
+LyricsTopRapSongs3$Title<-gsub("-", " ", LyricsTopRapSongs3$Title)
+LyricsTopRapSongs3$Artist<-gsub("-", " ", LyricsTopRapSongs3$Artist)
 
 write.csv(LyricsTopRapSongs3, "TopRapSongs.csv", row.names = FALSE)
 TopRapSongsCSV <-read.csv("TopRapSongs.csv")
