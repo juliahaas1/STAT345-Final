@@ -13,7 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r student1}
 
-
 #TESSA PLOT 1
 unique_ratio_graph_by_year
 
@@ -22,9 +21,7 @@ filter(TopCountry, Year==1960)
 #3 songs in our dataset with Year = 1960: "He'll have you go", "please Im falling", "alabam"
 
 
-<<<<<<< HEAD
 #the linear model fits the data a lot better here, R^2= 0.3174, year explains about 32% of the variability in data. 
-=======
 
 #what about looking for averages per year?
 total_repeats_by_year<- title_repetition_df_TopCountry %>%
