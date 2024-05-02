@@ -58,6 +58,7 @@ library(tidytext)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(data.table)
  
 # Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame.
 # The function inputs: The input of this function is a data frame, which must have columns with "year" and "lyrics".
@@ -84,6 +85,7 @@ unique_words_ratios <- generate_unique_ratios(TopCountry)
 mean_unique_words_ratio <-mean(unique_words_ratios$ratio)
 mean_unique_words_ratio
 
+rap_ratio <-generate_unique_ratios(LyricsTopRapSongs3)
 
 # create graph showing how the unique ratio has changed over time:
 unique_ratio_graph_by_year <-
@@ -98,6 +100,13 @@ unique_ratio_graph_by_year <-
 unique_ratio_graph_by_year <- unique_ratio_graph_by_year + geom_hline(yintercept = mean_unique_words_ratio, color = "skyblue3")
 unique_ratio_graph_by_year
 
+ggplot(rap_ratio, aes(x = Year, y = ratio)) +
+  geom_line() +
+  labs(title = "Unique Words Ratio Over Time",
+       x = "Year",
+       y = "Unique Words Ratio") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_minimal()
 
 ```
 
