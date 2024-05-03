@@ -337,7 +337,7 @@ Rap_Title_Repetition
 alcohol <- c("whiskey", "moonshine", "beer", "wine", "tequila", "vodka", "jack daniels", "budlight", "coorslight", "busch", "alcohol", "rum", "gin", "brandy", "cognac", "schnapps", "absinthe", "champagne", "sake")
 intimacy <- c("sexy", "hot", "sex", "attractive", "baby", "babe", "lover", "sweetheart", "passion", "desire", "romance", "affection", "intimacy", "seductive", "lust")
 family <- c("mom", "mama", "granny", "marriage", "children", "marry", "wife", "husband", "dogs", "father", "daddy", "grandpa", "grandmother", "aunt", "uncle", "cousin", "siblings", "in-laws", "offspring")
-drugs <- c("coke", "cocane", "tabacco", "weed", "heroin", "methamphetamine", "LSD", "ecstasy", "prescription drugs", "opioids", "hallucinogens", "MDMA", "smoke", "smoking")
+drugs <- c("coke", "cocaine", "tabacco", "weed", "heroin", "methamphetamine", "LSD", "ecstasy", "prescription drugs", "opioids", "hallucinogens", "MDMA", "smoke", "smoking")
 guns <- c("gun", "guns", "revolver", "shotgun", "rifle", "pistol", "firearm", "ammunition", "sniper", "handgun", "arsenal")
 music <- c("melody", "rhythm", "harmony", "lyrics", "genre", "beat", "album", "artist", "band", "guitar")
 sad <- c("heartbreak", "sorrow", "grief", "despair", "melancholy", "misery", "anguish", "heartache", "depression", "tears")
@@ -358,7 +358,7 @@ violence <- c("violence", "fight", "attack", "assault", "battle", "war", "weapon
   swear_count <- 0
   violence_count <- 0
 
-ThemeGraph <- function(TopGenre) {
+ThemeGraph <- function(TopGenre, graph_title) {
 # Loop through each row of the lyrics column in Topsongs2
 for (lyric in TopGenre$lyrics) {
   # Check if any word from each vector is present in the lyrics
@@ -403,14 +403,21 @@ total_counts <- data.frame(
   count = c(alcohol_count, intimacy_count, family_count, drugs_count, guns_count, music_count, sad_count, countylivin_count, town_count, swear_count, violence_count)
 )
 
+# Make counts into proportions so we can compare across genres
+total_counts$proportion <- total_counts$count / sum(total_counts$count)
 
-# Create a bar chart using ggplot
-ggplot(total_counts, aes(x = vector, y = count)) +
+# Create a bar chart using ggplot with proportions
+ggplot(total_counts, aes(x = vector, y = proportion)) +
   geom_bar(stat = "identity") +
-  labs(x = "Vector", y = "Total Count of Songs") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  labs(title = graph_title,
+       x = "Themes",
+       y = "Proportion of Songs with Words in Themes") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.5))
 }
-ThemeGraph(TopRapSongsCSV)
-ThemeGraph(TopCountry)
+
+ThemeGraph(TopRapSongsCSV, "Proportions of Themes Found in Rap Songs")
+ThemeGraph(TopCountry, "Proportions of Themes Found in Country Songs")
 ```
 
