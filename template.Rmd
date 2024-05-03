@@ -357,7 +357,10 @@ violence <- c("violence", "fight", "attack", "assault", "battle", "war", "weapon
   town_count <- 0
   swear_count <- 0
   violence_count <- 0
-
+  
+# Purpose:
+# Input:
+# Output:
 ThemeGraph <- function(TopGenre, graph_title) {
 # Loop through each row of the lyrics column in Topsongs2
 for (lyric in TopGenre$lyrics) {
