@@ -7,199 +7,16 @@ date: "2023-03-31"
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(rvest)
+library(stringr)
+library(tidytext)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(data.table)
 ```
 
-## Section One Julia
-
-```{r student1}
-
-```
-
-
-## Section Two Tessa
-```{r student2}
-# TESSA - TITLE REPETITION FUNCTION WITH GRAPH INCLUDED
-# Purpose: To find the number of times a song repeats its title within its own lyrics. Then add the frequency of repeats to the inputted data frame. Lastly it will provide a graph of average title repeats over time with a linear regression model to see if there is a linear relationship.
-# The function inputs: The input of this function is a data frame, which must have columns with "Title", "Year", and "lyrics".
-# The function output: The function returns the inputted data frame, along with a column called repeats. It will print out a graph showing average title repeats over time with a fitted linear regression model. It will also output some summary statistics of the fitted model.
-generate_title_repetition_graph <- function(song_df, graph_title) {
-  # Initialize empty column called repeats to hold frquency
-  song_df$repeats <- numeric(nrow(song_df))
-  
-  # for each row in inputted data frame:
-  for (i in 1:nrow(song_df)) {
-    title <- tolower(song_df$Title[i])  # extract title
-    lyrics <- tolower(song_df$lyrics[i]) # extract lyrics
-    
-    # sum number of times the title is in the lyrics
-    title_count <- sum(gregexpr(title, lyrics)[[1]] > 0)
-    
-    # add repeats count to the existing data frame
-    song_df$repeats[i] <- title_count
-  }
-  
-  ##JULIA###
-  #create table with average title repeats within each song per year
-  ave_title_repeats_by_year <- song_df %>%
-    group_by(Year) %>%
-    summarize(AveTitleRepeats = mean(repeats))
-  
-  # plot data by year
-  ave_title_repeats <-
-    ggplot(ave_title_repeats_by_year, aes(x = Year, y = AveTitleRepeats)) +
-    geom_point(size = 1.2) +
-    geom_smooth(method = "lm", se = FALSE, color = "skyblue3") +
-    labs(title = graph_title,
-         x = "Year",
-         y = "Mean Title Repeats Per Year") +
-    theme_minimal() +
-    scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(
-      ave_title_repeats_by_year$AveTitleRepeats
-    ), by = 5)) + theme(plot.title = element_text(hjust = 0.5))
-  
-  print(ave_title_repeats)
-  
-  res2 <- lm(AveTitleRepeats ~ Year, ave_title_repeats_by_year)
-  print(summary(res2))
-  
-}
-
-Country_Title_Repetition <-generate_title_repetition_graph(TopCountry, "Average Title Repeats of Top Country Over Time")
-Country_Title_Repetition
-Rap_Title_Repetition <-generate_title_repetition_graph(TopRapSongsCSV, "Average Title Repeats of Top Rap Over Time")
-Rap_Title_Repetition
-```
-
-
-
-## Section Three Eva
-
-```{r student3}
-# Modify artist and title names
-TopSongs2 <- as.data.frame(TopSongs2)
-TopSongs2$Title <- sub("-$", "", TopSongs2$Title)
-TopSongs2$Title <- gsub("[,.?%()]", "", TopSongs2$Title)
-TopSongs2$Artist <- gsub("[.']", "", TopSongs2$Artist)
-TopSongs2$Artist <- sub("-and", "", TopSongs2$Artist)
-
-# Function to scrape lyrics
-scrape_lyrics <- function(df) {
-  lyrics <- character(nrow(df))  
-  for (i in 1:nrow(df)) {
-    url <- paste0("https://www.songlyrics.com/", df$Artist[i], "/", df$Title[i], "-lyrics/")
-    # Tests for errors when getting URLs and makes sure code keeps running after an error occurs
-    tryCatch({
-      html <- read_html(url)
-      raw_lyrics <- html_nodes(html, "#songLyricsDiv") %>% html_text() %>% as.character()
-      lyrics[i] <- paste(raw_lyrics, collapse = " ")
-    }, error = function(e) {
-    })
-  }
-  df$lyrics <- lyrics  
-  return(df)
-}
-# Apply function to our data frame
-TopSongs2 <- scrape_lyrics(TopSongs2)
-```
-
-```{r}
-# Modifies song lyrics to match
-TopSongs2$lyrics <- gsub("\n", " ", TopSongs2$lyrics)
-TopSongs2$lyrics <- gsub("[,.()]", "", TopSongs2$lyrics)
-TopSongs2$lyrics <- tolower(TopSongs2$lyrics)
-# Remove rows with missing lyrics
-TopSongs2 <- subset(TopSongs2, !(is.na(lyrics) | lyrics == ""))
-TopSongs2 <- subset(TopSongs2, !grepl("we do not have the lyrics for", lyrics))
-
-```
-
-
-## Section Four Sophie 
-
-```{r student4}
-alcohol <- c("whiskey", "moonshine", "beer", "wine", "tequila", "vodka", "jack daniels", "budlight", "coorslight", "busch", "alcohol", "rum", "gin", "brandy", "cognac", "schnapps", "absinthe", "champagne", "sake")
-intimacy <- c("sexy", "hot", "sex", "attractive", "baby", "babe", "lover", "sweetheart", "passion", "desire", "romance", "affection", "intimacy", "seductive", "lust")
-family <- c("mom", "mama", "granny", "marriage", "children", "marry", "wife", "husband", "dogs", "father", "daddy", "grandpa", "grandmother", "aunt", "uncle", "cousin", "siblings", "in-laws", "offspring")
-drugs <- c("coke", "cocane", "tabacco", "weed", "heroin", "methamphetamine", "LSD", "ecstasy", "prescription drugs", "opioids", "hallucinogens", "MDMA", "smoke", "smoking")
-guns <- c("gun", "guns", "revolver", "shotgun", "rifle", "pistol", "firearm", "ammunition", "sniper", "handgun", "arsenal")
-music <- c("melody", "rhythm", "harmony", "lyrics", "genre", "beat", "album", "artist", "band", "guitar")
-sad <- c("heartbreak", "sorrow", "grief", "despair", "melancholy", "misery", "anguish", "heartache", "depression", "tears")
-countylivin <- c("cowboy", "horse", "truck", "pickup", "road", "tea", "tractor", "barn", "ranch", "cattle", "hay", "pasture", "cowboy boots", "western", "yeehaw", "rodeo")
-town <- c("small town", "hometown", "back home", "home", "village", "community", "neighborhood", "suburb", "township", "locality", "settlement")
-swear <- c("hell", "damn", "fuck", "bitch", "bitch", "ass", "asshole", "bastard", "shit", "bloody", "hellfire", "motherfucker", "crap", "piss", "bollocks", "wanker", "bugger")
-violence <- c("violence", "fight", "attack", "assault", "battle", "war", "weapon", "blood", "kill", "murder", "homicide", "gun", "knife", "bullet", "shot", "stab", "punch", "strangle", "choke", "brutal", "beating", "injure", "wound", "trauma", "hurt", "pain", "suffering", "death", "hit")
-
-  alcohol_count <- 0
-  intimacy_count <- 0
-  family_count <- 0
-  drugs_count <- 0
-  guns_count <- 0
-  music_count <- 0
-  sad_count <- 0
-  countylivin_count <- 0
-  town_count <- 0
-  swear_count <- 0
-  violence_count <- 0
-
-ThemeGraph <- function(TopGenre) {
-# Loop through each row of the lyrics column in Topsongs2
-for (lyric in TopGenre$lyrics) {
-  # Check if any word from each vector is present in the lyrics
-  if (any(grepl(paste(alcohol, collapse = "|"), lyric, ignore.case = TRUE))) {
-    alcohol_count <- alcohol_count + 1
-  }
-  if (any(grepl(paste(intimacy, collapse = "|"), lyric, ignore.case = TRUE))) {
-    intimacy_count <- intimacy_count + 1
-  }
-  if (any(grepl(paste(family, collapse = "|"), lyric, ignore.case = TRUE))) {
-    family_count <- family_count + 1
-  }
-  if (any(grepl(paste(drugs, collapse = "|"), lyric, ignore.case = TRUE))) {
-    drugs_count <- drugs_count + 1
-  }
-  if (any(grepl(paste(guns, collapse = "|"), lyric, ignore.case = TRUE))) {
-    guns_count <- guns_count + 1
-  }
-  if (any(grepl(paste(music, collapse = "|"), lyric, ignore.case = TRUE))) {
-    music_count <- music_count + 1
-  }
-  if (any(grepl(paste(sad, collapse = "|"), lyric, ignore.case = TRUE))) {
-    sad_count <- sad_count + 1
-  }
-  if (any(grepl(paste(countylivin, collapse = "|"), lyric, ignore.case = TRUE))) {
-    countylivin_count <- countylivin_count + 1
-  }
-  if (any(grepl(paste(town, collapse = "|"), lyric, ignore.case = TRUE))) {
-    town_count <- town_count + 1
-  }
-  if (any(grepl(paste(swear, collapse = "|"), lyric, ignore.case = TRUE))) {
-    swear_count <- swear_count + 1
-  }
-  if (any(grepl(paste(violence, collapse = "|"), lyric, ignore.case = TRUE))) {
-    violence_count <- violence_count + 1
-  }
-}
-
-# Create a data frame to store the counts
-total_counts <- data.frame(
-  vector = c("Alcohol", "Intimacy", "Family", "Drugs", "Guns", "Music", "Sad", "Country Living", "Town", "Swear", "Violence"),
-  count = c(alcohol_count, intimacy_count, family_count, drugs_count, guns_count, music_count, sad_count, countylivin_count, town_count, swear_count, violence_count)
-)
-
-
-# Create a bar chart using ggplot
-ggplot(total_counts, aes(x = vector, y = count)) +
-  geom_bar(stat = "identity") +
-  labs(x = "Vector", y = "Total Count of Songs") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-}
-ThemeGraph(TopRapSongsCSV)
-ThemeGraph(TopCountry)
-```
-
-
-
-
+## Country Data
 ```{r}
 
 
@@ -280,8 +97,9 @@ TopSongs2$Artist <- sub("-and", "", TopSongs2$Artist)
 ```
 
 ```{r}
-#EVA######
-# Function to scrape lyrics
+# Purpose: This function scrapes lyrics from songlyrics.com for the billboard top 100 country songs 
+# Input: Our songs data frame
+# Output: A new column in the songs data frame with lyrics for every song
 scrape_lyrics <- function(df) {
   lyrics <- character(nrow(df))  
   for (i in 1:nrow(df)) {
@@ -409,15 +227,7 @@ TopRapSongsCSV <-read.csv("TopRapSongs.csv")
 
 ## Measure of Repetitivness: Unqiue Words Ratio - Tessa
 ```{r}
-# TESSA - UNIQUE RATIO FUNCTION WITH GRAPH
-library(rvest)
-library(stringr)
-library(tidytext)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
- 
-
+# UNIQUE RATIO FUNCTION WITH GRAPH
 # Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame and create a ggplot of the resulting data.
 # The function inputs: The input of this function is a data frame, which must have columns with "year" and "lyrics". It also take in graph_title which allows you to specifically name your graph.
 # The function output: The function return a data frame with columns of year, total words, unique words, and unique ratio. The function will print the graph out showing a trend of unqiue word ratio over time.
@@ -470,84 +280,138 @@ Rap_Unique_Ratio_Graph
 
 ## Measure of Receptiveness: Title Repetition - Tessa and Julia
 ```{r}
-# TESSA - TITLE REPETITION FUNCTION
-# Purpose: To find the number of times a song repeats its title within its own lyrics. Then add the frequency of repeats to the inputted data frame.
-# The function inputs: The input of this function is a data frame, which must have columns with "Title" and "lyrics".
-# The function output: The function returns the inputted data frame, along with a column called repeats.
-generate_title_repetition_column <- function(song_df) {
+# TITLE REPETITION FUNCTION WITH GRAPH INCLUDED
+# Purpose: To find the number of times a song repeats its title within its own lyrics. Then add the frequency of repeats to the inputted data frame. Lastly it will provide a graph of average title repeats over time with a linear regression model to see if there is a linear relationship.
+# The function inputs: The input of this function is a data frame, which must have columns with "Title", "Year", and "lyrics".
+# The function output: The function returns the inputted data frame, along with a column called repeats. It will print out a graph showing average title repeats over time with a fitted linear regression model. It will also output some summary statistics of the fitted model.
+generate_title_repetition_graph <- function(song_df, graph_title) {
   # Initialize empty column called repeats to hold frquency
   song_df$repeats <- numeric(nrow(song_df))
   
   # for each row in inputted data frame:
-  for (i in 1:nrow(song_df)) { 
-    title <- song_df$Title[i]  # extract title 
-    lyrics <- song_df$lyrics[i] # extract lyrics
+  for (i in 1:nrow(song_df)) {
+    title <- tolower(song_df$Title[i])  # extract title
+    lyrics <- tolower(song_df$lyrics[i]) # extract lyrics
     
     # sum number of times the title is in the lyrics
-    title_count <- sum(gregexpr(title, lyrics)[[1]] > 0) 
+    title_count <- sum(gregexpr(title, lyrics)[[1]] > 0)
     
     # add repeats count to the existing data frame
     song_df$repeats[i] <- title_count
   }
-  return(song_df)
-}
- 
-title_repetition_df_TopCountry <- generate_title_repetition_column(TopCountry)
-
-
-# Purpose: To create a graph of the average title repeats over time.
-# The function inputs: 
-# The function output: 
-graph_title_repetition <- function(title_repetition_df) {
   
   #create table with average title repeats within each song per year
-  ave_title_repeats_by_year<- title_repetition_df %>%
-  group_by(Year) %>%
-  summarize(Year, AveTitleRepeats= mean(repeats)) %>%
-  unique()
-
-ave_title_repeats<-ggplot(ave_title_repeats_by_year, aes(x = Year, y = AveTitleRepeats)) +
-  geom_point( size = 1.2) +
-  geom_smooth(method = "lm",se = FALSE, color="skyblue3") +
-  labs(title = "Average Title Repeats Over Time",
-       x = "Year",
-       y = "Mean Title Repeats Per Year") +
-  theme_minimal() + scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(ave_title_repeats_by_year$AveTitleRepeats), by = 5)) + theme(plot.title = element_text(hjust = 0.5)) 
-
-print(ave_title_repeats)
-
-res2<-lm(AveTitleRepeats~Year, ave_title_repeats_by_year)
-print(summary(res2))
-
+  ave_title_repeats_by_year <- song_df %>%
+    group_by(Year) %>%
+    summarize(AveTitleRepeats = mean(repeats))
+  
+  # plot data by year
+  ave_title_repeats <-
+    ggplot(ave_title_repeats_by_year, aes(x = Year, y = AveTitleRepeats)) +
+    geom_point(size = 1.2) +
+    geom_smooth(method = "lm", se = FALSE, color = "skyblue3") +
+    labs(title = graph_title,
+         x = "Year",
+         y = "Mean Title Repeats Per Year") +
+    theme_minimal() +
+    scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(
+      ave_title_repeats_by_year$AveTitleRepeats
+    ), by = 5)) + theme(plot.title = element_text(hjust = 0.5))
+  
+  print(ave_title_repeats)
+  
+  res2 <- lm(AveTitleRepeats ~ Year, ave_title_repeats_by_year)
+  print(summary(res2))
+  
 }
 
-graph_title_repetition(title_repetition_df_TopCountry)
+Country_Title_Repetition <-generate_title_repetition_graph(TopCountry, "Average Title Repeats of Top Country Over Time")
+Country_Title_Repetition
+Rap_Title_Repetition <-generate_title_repetition_graph(TopRapSongsCSV, "Average Title Repeats of Top Rap Over Time")
+Rap_Title_Repetition
 
-
-
-####JULIA - ADD BETTER GRAPH AND CODE FOR TITLE REPETITON:
-
-#create table with average title repeats within each song per year
-ave_title_repeats_by_year<- title_repetition_df_TopCountry %>%
-  group_by(Year) %>%
-  summarize(Year, AveTitleRepeats=ave(repeats)) %>%
-  unique()
-
-
-# Julia:   
-#plot data by year
-#include linear model of relationship between year and average repetition
-ave_title_repeats<-ggplot(ave_title_repeats_by_year, aes(x = Year, y = AveTitleRepeats)) +
-  geom_point( size = 1.2) +
-  geom_smooth(method = "lm",se = FALSE, color="skyblue3") +
-  labs(title = "Average Title Repeats Over Time",
-       x = "Year",
-       y = "Mean Title Repeats Per Year") +
-  theme_minimal() + scale_y_continuous(limits = c(0, NA), breaks = seq(0, max(ave_title_repeats_by_year$AveTitleRepeats), by = 5)) + theme(plot.title = element_text(hjust = 0.5)) 
-ave_title_repeats
-
-
-#inspect linear model and observe summary statistics
-res2<-lm(AveTitleRepeats~Year, ave_title_repeats_by_year)
-summary(res2)
 ```
+
+
+## Sophie
+```{r}
+alcohol <- c("whiskey", "moonshine", "beer", "wine", "tequila", "vodka", "jack daniels", "budlight", "coorslight", "busch", "alcohol", "rum", "gin", "brandy", "cognac", "schnapps", "absinthe", "champagne", "sake")
+intimacy <- c("sexy", "hot", "sex", "attractive", "baby", "babe", "lover", "sweetheart", "passion", "desire", "romance", "affection", "intimacy", "seductive", "lust")
+family <- c("mom", "mama", "granny", "marriage", "children", "marry", "wife", "husband", "dogs", "father", "daddy", "grandpa", "grandmother", "aunt", "uncle", "cousin", "siblings", "in-laws", "offspring")
+drugs <- c("coke", "cocane", "tabacco", "weed", "heroin", "methamphetamine", "LSD", "ecstasy", "prescription drugs", "opioids", "hallucinogens", "MDMA", "smoke", "smoking")
+guns <- c("gun", "guns", "revolver", "shotgun", "rifle", "pistol", "firearm", "ammunition", "sniper", "handgun", "arsenal")
+music <- c("melody", "rhythm", "harmony", "lyrics", "genre", "beat", "album", "artist", "band", "guitar")
+sad <- c("heartbreak", "sorrow", "grief", "despair", "melancholy", "misery", "anguish", "heartache", "depression", "tears")
+countylivin <- c("cowboy", "horse", "truck", "pickup", "road", "tea", "tractor", "barn", "ranch", "cattle", "hay", "pasture", "cowboy boots", "western", "yeehaw", "rodeo")
+town <- c("small town", "hometown", "back home", "home", "village", "community", "neighborhood", "suburb", "township", "locality", "settlement")
+swear <- c("hell", "damn", "fuck", "bitch", "bitch", "ass", "asshole", "bastard", "shit", "bloody", "hellfire", "motherfucker", "crap", "piss", "bollocks", "wanker", "bugger")
+violence <- c("violence", "fight", "attack", "assault", "battle", "war", "weapon", "blood", "kill", "murder", "homicide", "gun", "knife", "bullet", "shot", "stab", "punch", "strangle", "choke", "brutal", "beating", "injure", "wound", "trauma", "hurt", "pain", "suffering", "death", "hit")
+
+  alcohol_count <- 0
+  intimacy_count <- 0
+  family_count <- 0
+  drugs_count <- 0
+  guns_count <- 0
+  music_count <- 0
+  sad_count <- 0
+  countylivin_count <- 0
+  town_count <- 0
+  swear_count <- 0
+  violence_count <- 0
+
+ThemeGraph <- function(TopGenre) {
+# Loop through each row of the lyrics column in Topsongs2
+for (lyric in TopGenre$lyrics) {
+  # Check if any word from each vector is present in the lyrics
+  if (any(grepl(paste(alcohol, collapse = "|"), lyric, ignore.case = TRUE))) {
+    alcohol_count <- alcohol_count + 1
+  }
+  if (any(grepl(paste(intimacy, collapse = "|"), lyric, ignore.case = TRUE))) {
+    intimacy_count <- intimacy_count + 1
+  }
+  if (any(grepl(paste(family, collapse = "|"), lyric, ignore.case = TRUE))) {
+    family_count <- family_count + 1
+  }
+  if (any(grepl(paste(drugs, collapse = "|"), lyric, ignore.case = TRUE))) {
+    drugs_count <- drugs_count + 1
+  }
+  if (any(grepl(paste(guns, collapse = "|"), lyric, ignore.case = TRUE))) {
+    guns_count <- guns_count + 1
+  }
+  if (any(grepl(paste(music, collapse = "|"), lyric, ignore.case = TRUE))) {
+    music_count <- music_count + 1
+  }
+  if (any(grepl(paste(sad, collapse = "|"), lyric, ignore.case = TRUE))) {
+    sad_count <- sad_count + 1
+  }
+  if (any(grepl(paste(countylivin, collapse = "|"), lyric, ignore.case = TRUE))) {
+    countylivin_count <- countylivin_count + 1
+  }
+  if (any(grepl(paste(town, collapse = "|"), lyric, ignore.case = TRUE))) {
+    town_count <- town_count + 1
+  }
+  if (any(grepl(paste(swear, collapse = "|"), lyric, ignore.case = TRUE))) {
+    swear_count <- swear_count + 1
+  }
+  if (any(grepl(paste(violence, collapse = "|"), lyric, ignore.case = TRUE))) {
+    violence_count <- violence_count + 1
+  }
+}
+
+# Create a data frame to store the counts
+total_counts <- data.frame(
+  vector = c("Alcohol", "Intimacy", "Family", "Drugs", "Guns", "Music", "Sad", "Country Living", "Town", "Swear", "Violence"),
+  count = c(alcohol_count, intimacy_count, family_count, drugs_count, guns_count, music_count, sad_count, countylivin_count, town_count, swear_count, violence_count)
+)
+
+
+# Create a bar chart using ggplot
+ggplot(total_counts, aes(x = vector, y = count)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Vector", y = "Total Count of Songs") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+}
+ThemeGraph(TopRapSongsCSV)
+ThemeGraph(TopCountry)
+```
+
