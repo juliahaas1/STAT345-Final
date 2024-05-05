@@ -1,13 +1,11 @@
+---
 title: "Final Project - Song Repetitiveness"
 author: "Eva, Julia, Sophie, and Tessa"
 date: "2024-05-07"
 output:
   html_document:
     df_print: paged
-=======
-title: "Super Awesome Project Template"
-output: word_document
-date: "2023-03-31"
+---
 
 
 ```{r setup, include=FALSE}
@@ -226,7 +224,7 @@ TopHipHopSongsCSV <-read.csv("TopHipHopSongs.csv")
 ```
 
 
-## Measure of Repetitivness: Unqiue Words Ratio - Tessa
+## Measure of Repetitiveness: Unqiue Words Ratio
 ```{r, warning=FALSE}
 # UNIQUE RATIO FUNCTION WITH GRAPH
 # Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame and create a ggplot of the resulting data.
@@ -274,12 +272,17 @@ return(unique_ratio_graph_by_year)
 
 Country_Unique_Ratio_Graph <-generate_unique_ratios_graph(TopCountry, "Unique Words Ratio of Top Country Songs Over Time")
 Country_Unique_Ratio_Graph
-Rap_Unique_Ratio_Graph <-generate_unique_ratios_graph(TopRapSongsCSV, "Unique Words Ratio of Top Rap Songs Over Time")
-Rap_Unique_Ratio_Graph
+HipHop_Unique_Ratio_Graph <-generate_unique_ratios_graph(TopHipHopSongsCSV, "Unique Words Ratio of Top Hip Hop Songs Over Time")
+HipHop_Unique_Ratio_Graph
 
 ```
+The unique words graph creates a line graph of the average ratio of unique words for each year in the inputted data set. The graph also includes a blue line which represents the overall unique word ratio from all the years. By including this blue line we can reference when the ratio is above and below average. The unique word ratio represents how much diversity the words have within the lyrics. A low unique word ratio suggests a higher level of repetitiveness within the lyrics.
 
-## Measure of Receptiveness: Title Repetition - Tessa and Julia
+When looking at the Top Country data we see a high unique word ratio in the earlier years, especially around 1960 it peaks. A high ratio indicates that there are more unique words compared to overall words. Then the graph follows a downward trend and bottoms out around the mid to end 1980s. During this period we see the most repetitive lyrics and this could be due to the artists who have top songs. For example, where we see this low unique word ratio in the mid to late 1980s there are lots of songs by the band Alabama. Then we continue to see a low ratio in the 1990s and part of this could be because the artist Alan Jackson has multiple top songs within those years. Towards the end of the data we see the ratio trend back upwards and this could be because Country music has been changing a lot and becoming more pop-like. Another reason could be that there are more artists with top songs throughout the more recent years.
+
+In the Hip Hop graph, we cannot see a clear trend regarding the ratio of the unique words. This could be because we have a smaller sample size of Hip Hop songs compared to Country songs. We only have data from 1987 to 2023, but there are a lot fewer songs within each year. From the data we do have there seems to be a lot of variation from year to year, this could be due to how Hip Hop has evolved and was a newer genre in the 1980s. Towards the 2000's we collected a lot more data and the unique ratio is trending upwards, meaning the songs are becoming less repetitive. This could explained by how Hip Hop music has become a broader genre, and there are a lot more artists entering the genre as well.
+
+## Measure of Repetitiveness: Title Repetition
 ```{r, warning=FALSE}
 # TITLE REPETITION FUNCTION WITH GRAPH INCLUDED
 # Purpose: To find the number of times a song repeats its title within its own lyrics. Then add the frequency of repeats to the inputted data frame. Lastly it will provide a graph of average title repeats over time with a linear regression model to see if there is a linear relationship.
@@ -328,8 +331,8 @@ generate_title_repetition_graph <- function(song_df, graph_title) {
 
 Country_Title_Repetition <-generate_title_repetition_graph(TopCountry, "Average Title Repeats of Top Country Over Time")
 Country_Title_Repetition
-Rap_Title_Repetition <-generate_title_repetition_graph(TopRapSongsCSV, "Average Title Repeats of Top Rap Over Time")
-Rap_Title_Repetition
+HipHop_Title_Repetition <-generate_title_repetition_graph(TopHipHopSongsCSV, "Average Title Repeats of Top Hip Hop Over Time")
+HipHop_Title_Repetition
 
 ```
 
