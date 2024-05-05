@@ -33,7 +33,7 @@ To start the process of analyzing song lyrics, we first created a data frame wit
 
 
 ## Country Data
-```{r, warning=FALSE, eval=FALSE}
+```{r, warning=FALSE}
 
 #Sophies#####
 #Use URLs to get song titles, artists, and dates
@@ -221,7 +221,7 @@ DFTopHipHopSongs <- clean_data(TopHipHopSongs)
 LyricsHipHopSongs <- scrape_lyrics(DFTopHipHopSongs)
 LyricsHipHopSongs <- clean_data(LyricsHipHopSongs)
 
-write.csv(LyricsHipHopRapSongs, "TopHipHopSongs.csv", row.names = FALSE)
+write.csv(LyricsHipHopSongs, "TopHipHopSongs.csv", row.names = FALSE)
 TopHipHopSongsCSV <-read.csv("TopHipHopSongs.csv")
 ```
 
