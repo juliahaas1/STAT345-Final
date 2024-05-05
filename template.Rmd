@@ -1,8 +1,9 @@
-<<<<<<< HEAD
+
 ---
-title: "Super Awesome Project Template"
+title: "Final Project - Song Repetitiveness"
+author: "Eva, Julia, Sophie and Tessa"
 output: word_document
-date: "2023-03-31"
+date: "2024-05-07"
 ---
 
 ```{r setup, include=FALSE}
@@ -293,7 +294,7 @@ generate_title_repetition_graph <- function(song_df, graph_title) {
     lyrics <- tolower(song_df$lyrics[i]) # extract lyrics
     
     # sum number of times the title is in the lyrics
-    title_count <- sum(gregexpr(title, lyrics)[[1]] > 0)
+    title_count <- sum(gregexpr(title, lyrics)[[1]] > 0). # match string to another string and check if we get a result
     
     # add repeats count to the existing data frame
     song_df$repeats[i] <- title_count
