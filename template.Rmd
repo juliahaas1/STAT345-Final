@@ -64,33 +64,34 @@ urlfunction <- function(year) {
   return(desired_table)
       
 }
-TopSongs <- data.frame()
-for(year in 1958:2023){
-    current_year <- urlfunction(year)
-    TopSongs <- rbind(TopSongs, current_year)
+TopSongs <- rbindlist(lapply(1958:2023, urlfunction), fill = TRUE)
+
+clean_data <- function(dataset) {
+    #input: a data set
+    #output and purpose: clean up the data set for creating urls in the 
+    # Remove quotation marks from the Title column and puts it into a format that is easily inputted into urls
+    dataset$Title <- gsub('"', '', dataset$Title)
+    # Replace spaces with hyphens in all columns for URL purposes
+    dataset <- lapply(dataset, function(x) gsub(" ", "-", x))
+    # Convert the modified dataset to a data frame
+    dataset <- as.data.frame(dataset)
+    # Remove hyphens at the end of Title column
+    dataset$Title <- sub("-$", "", dataset$Title)
+    # Remove special characters from the Title column
+    dataset$Title <- gsub("[,.?%()]", "", dataset$Title)
+    # Remove periods and apostrophes from the Artist column
+    dataset$Artist <- gsub("[.']", "", dataset$Artist)
+    # Remove "-and" from the end of Artist names
+    dataset$Artist <- sub("-and", "", dataset$Artist)
+    # Return the cleaned dataset
+    return(dataset)
 }
 
-
-
-#Julia#####
-
-#remove slash and everything behind it
-TopSongs$Title<-gsub("/.*", "", TopSongs$Title)
-
-#remove quotation marks
-TopSongs$Title<-gsub('"', '', TopSongs$Title)
-
-#new data frame with dashes instead of spaces for url purposes
-TopSongs2 <- sapply(TopSongs, function(x) gsub(" ", "-", x))
-
-# Modify artist and title names
-TopSongs2 <- as.data.frame(TopSongs2)
-TopSongs2$Title <- sub("-$", "", TopSongs2$Title)
-TopSongs2$Title <- gsub("[,.?%()]", "", TopSongs2$Title)
-TopSongs2$Artist <- gsub("[.']", "", TopSongs2$Artist)
-TopSongs2$Artist <- sub("-and", "", TopSongs2$Artist)
+# Clean the TopSongs dataset using the clean_data function
+TopSongs2 <- clean_data(TopSongs)
 
 ```
+
 
 ```{r, warning=FALSE}
 # Purpose: This function scrapes lyrics from songlyrics.com for the billboard top 100 country songs 
@@ -116,29 +117,27 @@ TopSongs3 <- scrape_lyrics(TopSongs2)
 ```
 
 ```{r, warning=FALSE}
-###EVA#####
-# Modifies song lyrics to match
-TopSongs3$lyrics <- gsub("\n", " ", TopSongs3$lyrics)
-TopSongs3$lyrics <- gsub("[,.()]", "", TopSongs3$lyrics)
-TopSongs3$lyrics <- tolower(TopSongs3$lyrics)
-# Remove rows with missing lyrics
-TopSongs3 <- subset(TopSongs3, !(is.na(lyrics) | lyrics == ""))
-TopSongs3 <- subset(TopSongs3, !grepl("we do not have the lyrics for", lyrics))
-
-
-##JULIA###
-#getting rid of duplicate songs
-TopSongs3 <- TopSongs3[!duplicated(TopSongs3$Title), ]
-
-#get rid of the dashes and make them spaces
-TopSongs3$Title <- gsub("-", " ", TopSongs3$Title)
-TopSongs3$Artist <- gsub("-", " ", TopSongs3$Artist)
-
-#change title and artist to all lower case
-TopSongs3$Title<-tolower(TopSongs3$Title)
-TopSongs3$Artist<-tolower(TopSongs3$Artist)
-
-
+clean_dataLyrics <- function(dataset) {
+    # Remove slash and everything behind it in the Title column
+    dataset$Title <- gsub("/.*", "", dataset$Title)
+    # Remove quotation marks from the Title column
+    dataset$Title <- gsub('"', '', dataset$Title)
+    # Replace spaces with hyphens in all columns for URL purposes
+    dataset <- lapply(dataset, function(x) gsub(" ", "-", x))
+    # Convert the modified dataset to a data frame
+    dataset <- as.data.frame(dataset)
+    # Remove hyphens at the end of Title column
+    dataset$Title <- sub("-$", "", dataset$Title)
+    # Remove special characters from the Title column
+    dataset$Title <- gsub("[,.?%()]", "", dataset$Title)
+    # Remove periods and apostrophes from the Artist column
+    dataset$Artist <- gsub("[.']", "", dataset$Artist)
+    # Remove "-and" from the end of Artist names
+    dataset$Artist <- sub("-and", "", dataset$Artist)
+    # Return the cleaned dataset
+    return(dataset)
+}
+TopSongs3 <- clean_dataLyrics(TopSongs3)
 #save it as a csv file to working directory
 write.csv(TopSongs3, "TopCountry.csv", row.names = FALSE)
 
@@ -188,7 +187,7 @@ urlfunctionHipHop <- function(year) {
     #name columns
   desired_table$Year <- year
      #add columns for year
-  desired_table$genre <- "Rap" 
+  desired_table$genre <- "Hip Hop" 
      #add column for genre
   desired_table <- unique(desired_table)
      #take out repeated rows
@@ -202,30 +201,12 @@ TopHipHopSongs <- TopHipHopSongs[,c(1,2,5,6), drop = FALSE]
   #only including , artist, year,  and genre
 TopHipHopSongs <- unique(TopHipHopSongs)
   #deleting repeat columns
-DFTopHipHopSongs <- as.data.frame(TopHipHopSongs)
-DFTopHipHopSongs$Title<-gsub('"', '', DFTopHipHopSongs$Title)
-DFTopHipHopSongs <- sapply(DFTopHipHopSongs, function(x) gsub(" ", "-", x))
-DFTophipHopSongs <- as.data.frame(DFTopHipHopSongs)
-DFTopHipHopSongs$Title <- sub("-$", "", DFTopHipHopSongs$Title)
-DFTopHipHopSongs$Title <- gsub("[,.?%()]", "", DFTopHipHopSongs$Title)
-DFTopHipHopSongs$Artist <- gsub("[.']", "", DFTopHipHopSongs$Artist)
-DFTopHipHopSongs$Artist <- sub("-and", "", DFTopHipHopSongs$Artist)
+DFTopHipHopSongs <- clean_data(TopHipHopSongs)
+LyricsHipHopSongs <- scrape_lyrics(DFTopHipHopSongs)
+LyricsHipHopSongs <- clean_data(LyricsHipHopSongs)
 
-LyricsHipHopRapSongs3 <- scrape_lyrics(DFTopHipHopSongs)
-
-# Modifies song lyrics to match
-LyricsTopRapSongs3$lyrics <- gsub("\n", " ", LyricsTopRapSongs3$lyrics)
-LyricsTopRapSongs3$lyrics <- gsub("[,.()]", "", LyricsTopRapSongs3$lyrics)
-LyricsTopRapSongs3$lyrics <- tolower(LyricsTopRapSongs3$lyrics)
-# Remove rows with missing lyrics
-LyricsTopRapSongs3 <- subset(LyricsTopRapSongs3, !(is.na(lyrics) | lyrics == ""))
-LyricsTopRapSongs3 <- subset(LyricsTopRapSongs3, !grepl("we do not have the lyrics for", lyrics))
-# Remove dashes between title and artist
-LyricsTopRapSongs3$Title<-gsub("-", " ", LyricsTopRapSongs3$Title)
-LyricsTopRapSongs3$Artist<-gsub("-", " ", LyricsTopRapSongs3$Artist)
-
-write.csv(LyricsTopRapSongs3, "TopRapSongs.csv", row.names = FALSE)
-TopRapSongsCSV <-read.csv("TopRapSongs.csv")
+write.csv(LyricsHipHopRapSongs, "TopHipHopSongs.csv", row.names = FALSE)
+TopHipHopSongsCSV <-read.csv("TopHipHopSongs.csv")
 ```
 
 
