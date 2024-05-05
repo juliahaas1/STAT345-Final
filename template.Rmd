@@ -225,7 +225,7 @@ TopRapSongsCSV <-read.csv("TopRapSongs.csv")
 ```
 
 
-## Measure of Repetitivness: Unqiue Words Ratio - Tessa
+## Measure of Repetitivness: Unqiue Words Ratio
 ```{r, warning=FALSE}
 # UNIQUE RATIO FUNCTION WITH GRAPH
 # Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame and create a ggplot of the resulting data.
