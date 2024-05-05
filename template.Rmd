@@ -1,13 +1,11 @@
+---
 title: "Final Project - Song Repetitiveness"
 author: "Eva, Julia, Sophie, and Tessa"
 date: "2024-05-07"
 output:
   html_document:
     df_print: paged
-=======
-title: "Super Awesome Project Template"
-output: word_document
-date: "2023-03-31"
+---
 
 
 ```{r setup, include=FALSE}
