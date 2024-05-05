@@ -21,6 +21,17 @@ library(ggplot2)
 library(data.table)
 ```
 
+
+For this project, our goal was to gather song data, and then analyze the song lyrics for repetitiveness in various ways. 
+•	To start, we scraped Billboard Top 100 song data off of Wikipedia, and created a data frame with some basic information about each song.
+•	We then used the data frame of songs to write a function to gather corresponding lyrics from the lyric hosting website www.songlyrics.com.
+•	Once we had our cleaned up data frame of song information, we were then able to create functions to measure receptiveness and show them through multiple graphical visuals. 
+
+
+To start the process of analyzing song lyrics, we first created a data frame with the Billboard Top Country songs starting from 1958 when the Billboard charts were first introduced. We included the top song titles and their corresponding artist, year, and genre. We then used this data frame to get lyrics for each song by scraping a song lyrics website. We also had to modify the title and artist names to best match the URL’s for the lyrics website, in order to maximize the number of songs we could get lyrics for. 
+
+
+
 ## Country Data
 ```{r, warning=FALSE, eval=FALSE}
 
@@ -340,6 +351,14 @@ Rap_Title_Repetition <-generate_title_repetition_graph(TopRapSongsCSV, "Average 
 Rap_Title_Repetition
 
 ```
+
+The figures above represent the average amount of times each title was repeated within its song lyrics per charting year. For country music we have data that can be visualized from 1958 to 2019. When looking at our plot for country, we can see an upward trend within the points, so we can say that over time song titles are increasingly being repeated in lyrics. We decided to fit a linear model to the data, and after observing the summary statistics we can see that the model fits moderately well with an R squared statistic of 0.3169. Time is explaining about 31.7% of the variance in title repetition. 
+
+For Hip Hop, we have data that can be visualized from 1987 to 2023. Interestingly enough, we can see a downward trend in the repetition over time. It seems that over time, titles of songs are repeated less on average in lyrics. Unlike country music, a linear model does not fit very well to this model. Time in years can explain about 8.312% of the variance in the data points according to an R-squared statistic of 0.08312. In the figure for Hip Hop, the year 1990 stands out because of its high average repetition. In 1990 the top Hip Hop songs included "Ice Ice Baby" by Vanilla Ice, "Have you Seen her","Pray", and "U Can't Touch This" by MC Hammer, and "Just a Friend" by Biz Markie. The lyrics of these songs are extremely repetitive, which explains why this year has a high average. 
+
+Why are song titles being repeated more in Country and less in Hip Hop over time? One inference could be that country artists want to include the title of their songs in their music to enhance the listeners recall and remembrance of the song. Since the 1960s, the way musicians earn profit has changed, and artists may be focusing more on streams instead of selling records and cds. Another could be that over time the genre has shifted into more of a pop culture which is generally more repetitive. For Hip Hop, one inference could be that Hip Hop has grown in popularity over time and because of this, the genre has expanded in many ways. Hip Hop has developed into many sub genres and has become more diverse. 
+
+When comparing the two genres, we do have to keep in mind the fact that our collected country data has a sample size of 1460 that stretches over 61 years, while the Hip Hop genre has a sample size of 305, and only stretches 36 years of observation. Because our data for the country genre holds a larger sample size, we can see more of an accurate representation of trends within the genre. The sample size for Hip Hop is a lot smaller, and so our figures may not fully represent the genre.
 
 
 ## Sophie
