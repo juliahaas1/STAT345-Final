@@ -164,7 +164,7 @@ TopCountry<-read.csv("TopCountry.csv")
 
 ```
 
-RAP CODE 
+
 ```{r, warning=FALSE}
 #input: a year
 #output and purpose: create a table of the top rap songs from that year
@@ -453,3 +453,4 @@ ThemeGraph(TopRapSongsCSV, "Proportions of Themes Found in Rap Songs")
 ThemeGraph(TopCountry, "Proportions of Themes Found in Country Songs")
 ```
 
+For our final analysis, we wanted to explore themes within song lyrics by tracking repetitiveness of certain words. Both Country music and Hip Hop have common stereotypes, and we wanted to see if these stereotypes are as apparent as they are thought to be. The themes that we looked for include words or short phrases relating to "Alcohol", "Intimacy", "Family", "Drugs", "Guns", "Music", "Sad", "Country Living", "Town", "Swear", and "Violence". 
