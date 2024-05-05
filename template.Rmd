@@ -230,7 +230,8 @@ TopRapSongsCSV <-read.csv("TopRapSongs.csv")
 # UNIQUE RATIO FUNCTION WITH GRAPH
 # Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame and create a ggplot of the resulting data.
 # The function inputs: The input of this function is a data frame, which must have columns with "year" and "lyrics". It also take in graph_title which allows you to specifically name your graph.
-# The function output: The function return a data frame with columns of year, total words, unique words, and unique ratio. The function will print the graph out showing a trend of unqiue word ratio over time.
+# The function output: The function return a data frame with columns of year, total words, unique words, and unique ratio. The function will print the graph out showing a trend of unique word ratio over time.
+
 generate_unique_ratios_graph <- function(song_df, graph_title) {
 
 generate_unique_ratios <- function(song_df) {
@@ -249,7 +250,7 @@ generate_unique_ratios <- function(song_df) {
   return(unique_words_by_year)
 }
 # low ratio means songs are more repetitive
-unique_words_ratios <- generate_unique_ratios(song_df)
+unique_words_ratios <- generate_unique_ratios(song_df) 
 
 # find the overall unique words ratio to add to graph:
 overall_unique_words_ratio <-mean(unique_words_ratios$ratio)
@@ -262,7 +263,7 @@ unique_ratio_graph_by_year <-ggplot(unique_words_ratios, aes(x = Year, y = ratio
   geom_line() +
   geom_hline(yintercept = overall_unique_words_ratio, color = "skyblue3") + #add an hline to show when the data is above and below average
   annotate("text", x = x_midpoint, y = overall_unique_words_ratio + 0.01, label = "Average Unique Words Ratio", color = "skyblue3" ) +  # add label to represent what hline means
-  labs(title = graph_title,
+  labs(title = graph_title, # can customize title
        x = "Year",
        y = "Unique Words Ratio") +
   theme_minimal() +
@@ -273,8 +274,8 @@ return(unique_ratio_graph_by_year)
 
 Country_Unique_Ratio_Graph <-generate_unique_ratios_graph(TopCountry, "Unique Words Ratio of Top Country Songs Over Time")
 Country_Unique_Ratio_Graph
-Rap_Unique_Ratio_Graph <-generate_unique_ratios_graph(TopRapSongsCSV, "Unique Words Ratio of Top Rap Songs Over Time")
-Rap_Unique_Ratio_Graph
+HipHop_Unique_Ratio_Graph <-generate_unique_ratios_graph(TopRapSongsCSV, "Unique Words Ratio of Top Hip Hop Songs Over Time")
+HipHop_Unique_Ratio_Graph
 
 ```
 
@@ -284,8 +285,9 @@ Rap_Unique_Ratio_Graph
 # Purpose: To find the number of times a song repeats its title within its own lyrics. Then add the frequency of repeats to the inputted data frame. Lastly it will provide a graph of average title repeats over time with a linear regression model to see if there is a linear relationship.
 # The function inputs: The input of this function is a data frame, which must have columns with "Title", "Year", and "lyrics".
 # The function output: The function returns the inputted data frame, along with a column called repeats. It will print out a graph showing average title repeats over time with a fitted linear regression model. It will also output some summary statistics of the fitted model.
+
 generate_title_repetition_graph <- function(song_df, graph_title) {
-  # Initialize empty column called repeats to hold frquency
+  # Initialize empty column called repeats to hold frequency
   song_df$repeats <- numeric(nrow(song_df))
   
   # for each row in inputted data frame:
@@ -294,7 +296,7 @@ generate_title_repetition_graph <- function(song_df, graph_title) {
     lyrics <- tolower(song_df$lyrics[i]) # extract lyrics
     
     # sum number of times the title is in the lyrics
-    title_count <- sum(gregexpr(title, lyrics)[[1]] > 0). # match string to another string and check if we get a result
+    title_count <- sum(gregexpr(title, lyrics)[[1]] > 0) # match string to another string and check if we get a result
     
     # add repeats count to the existing data frame
     song_df$repeats[i] <- title_count
@@ -326,9 +328,7 @@ generate_title_repetition_graph <- function(song_df, graph_title) {
 }
 
 Country_Title_Repetition <-generate_title_repetition_graph(TopCountry, "Average Title Repeats of Top Country Over Time")
-Country_Title_Repetition
-Rap_Title_Repetition <-generate_title_repetition_graph(TopRapSongsCSV, "Average Title Repeats of Top Rap Over Time")
-Rap_Title_Repetition
+HipHop_Title_Repetition <-generate_title_repetition_graph(TopRapSongsCSV, "Average Title Repeats of Top Hip Hop Over Time")
 
 ```
 
@@ -413,15 +413,15 @@ total_counts$proportion <- total_counts$count / sum(total_counts$count)
 # Create a bar chart using ggplot with proportions
 ggplot(total_counts, aes(x = vector, y = proportion)) +
   geom_bar(stat = "identity") +
-  labs(title = graph_title,
+  labs(title = graph_title, # title can be customized
        x = "Themes",
        y = "Proportion of Songs with Words in Themes") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), #adjust axis
         plot.title = element_text(hjust = 0.5))
 }
 
-ThemeGraph(TopRapSongsCSV, "Proportions of Themes Found in Rap Songs")
+ThemeGraph(TopRapSongsCSV, "Proportions of Themes Found in Hip Hop Songs")
 ThemeGraph(TopCountry, "Proportions of Themes Found in Country Songs")
 ```
 
