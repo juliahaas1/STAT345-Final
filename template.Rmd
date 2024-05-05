@@ -2,8 +2,10 @@
 ---
 title: "Final Project - Song Repetitiveness"
 author: "Eva, Julia, Sophie and Tessa"
-output: word_document
 date: "2024-05-07"
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
