@@ -18,7 +18,7 @@ library(data.table)
 ```
 
 ## Country Data
-```{r, warning=FALSE, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 
 #Sophies#####
 #Use URLs to get song titles, artists, and dates
@@ -96,7 +96,7 @@ TopSongs2$Artist <- sub("-and", "", TopSongs2$Artist)
 
 ```
 
-```{r, warning=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 # Purpose: This function scrapes lyrics from songlyrics.com for the billboard top 100 country songs 
 # Input: Our songs data frame
 # Output: A new column in the songs data frame with lyrics for every song
@@ -119,7 +119,7 @@ scrape_lyrics <- function(df) {
 TopSongs3 <- scrape_lyrics(TopSongs2)
 ```
 
-```{r, warning=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 ###EVA#####
 # Modifies song lyrics to match
 TopSongs3$lyrics <- gsub("\n", " ", TopSongs3$lyrics)
@@ -146,14 +146,16 @@ TopSongs3$Artist<-tolower(TopSongs3$Artist)
 #save it as a csv file to working directory
 write.csv(TopSongs3, "TopCountry.csv", row.names = FALSE)
 
-#call it to test that it works and reads it correctly
-TopCountry<-read.csv("TopCountry.csv")
-
 
 ```
 
-RAP CODE 
-```{r, warning=FALSE}
+```{r, echo=FALSE}
+#Read the CSV file
+TopCountry<-read.csv("TopCountry.csv")
+```
+
+
+```{r, eval=FALSE, echo=FALSE}
 urlfunctionRap <- function(year) {
   if (year >= 2007 && year <= 2023) {
       country_url <- paste0("https://en.wikipedia.org/wiki/List_of_number-one_R%26B/hip-hop_songs_of_", year, "_(U.S.)")
@@ -221,12 +223,16 @@ LyricsTopRapSongs3$Title<-gsub("-", " ", LyricsTopRapSongs3$Title)
 LyricsTopRapSongs3$Artist<-gsub("-", " ", LyricsTopRapSongs3$Artist)
 
 write.csv(LyricsTopRapSongs3, "TopRapSongs.csv", row.names = FALSE)
+```
+
+```{r, echo=FALSE}
 TopRapSongsCSV <-read.csv("TopRapSongs.csv")
+head(TopRapSongsCSV)
 ```
 
 
 ## Measure of Repetitivness: Unqiue Words Ratio
-```{r, warning=FALSE}
+```{r, warning=FALSE, echo=FALSE}
 # UNIQUE RATIO FUNCTION WITH GRAPH
 # Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame and create a ggplot of the resulting data.
 # The function inputs: The input of this function is a data frame, which must have columns with "year" and "lyrics". It also take in graph_title which allows you to specifically name your graph.
@@ -280,7 +286,7 @@ HipHop_Unique_Ratio_Graph
 ```
 
 ## Measure of Receptiveness: Title Repetition - Tessa and Julia
-```{r, warning=FALSE}
+```{r, warning=FALSE, echo=FALSE}
 # TITLE REPETITION FUNCTION WITH GRAPH INCLUDED
 # Purpose: To find the number of times a song repeats its title within its own lyrics. Then add the frequency of repeats to the inputted data frame. Lastly it will provide a graph of average title repeats over time with a linear regression model to see if there is a linear relationship.
 # The function inputs: The input of this function is a data frame, which must have columns with "Title", "Year", and "lyrics".
@@ -334,7 +340,7 @@ HipHop_Title_Repetition <-generate_title_repetition_graph(TopRapSongsCSV, "Avera
 
 
 ## Sophie
-```{r, warning=FALSE}
+```{r, warning=FALSE, echo=FALSE}
 alcohol <- c("whiskey", "moonshine", "beer", "wine", "tequila", "vodka", "jack daniels", "budlight", "coorslight", "busch", "alcohol", "rum", "gin", "brandy", "cognac", "schnapps", "absinthe", "champagne", "sake")
 intimacy <- c("sexy", "hot", "sex", "attractive", "baby", "babe", "lover", "sweetheart", "passion", "desire", "romance", "affection", "intimacy", "seductive", "lust")
 family <- c("mom", "mama", "granny", "marriage", "children", "marry", "wife", "husband", "dogs", "father", "daddy", "grandpa", "grandmother", "aunt", "uncle", "cousin", "siblings", "in-laws", "offspring")
