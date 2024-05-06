@@ -438,4 +438,13 @@ ThemeGraph(TopCountry, "Proportions of Themes Found in Country Songs")
 ```
 
 For our final analysis, we wanted to explore themes within song lyrics by tracking repetitiveness of certain words. Both Country music and Hip Hop have common stereotypes, and we wanted to see if these stereotypes are as apparent as they are thought to be. The themes that we looked for include words or short phrases relating to "Alcohol", "Intimacy", "Family", "Drugs", "Guns", "Music", "Sad", "Country Living", "Town", "Swear", and "Violence". 
+
+When looking at the bar graph for Country, we can see that words relating to Alcohol, Country Living, Intimacy, and Violence seem to be the most repetitive. The themes of Drugs and Guns are very low, and Family, Music, Sad, Swear, and Town are all pretty moderate trends.
+
+When looking at the bar graph for Hip Hop, we can see that Intimacy, Swearing, and Violence are the most repetitive. Alcohol, Country Living, Drugs, Guns, and Town themes are all pretty moderately apparent, and the theme Sad appears the least according to our data collection. 
+
+Words relating to Drugs and Guns appears more frequently in Hip Hop than Country music, which is something that many people might be able to guess, although their differences are not as drastic as some might think. One interesting observation is that for both Country music and Hip Hop, Violence seems to be the most repeated theme. 
+
+
+
   
