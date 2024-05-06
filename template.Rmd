@@ -76,10 +76,57 @@ urlfunction <- function(year) {
 }
 ```
 
-<<<<<<< HEAD
 ## Hip Hop Data
 ```{r, warning= FALSE}
-=======
+
+#input: a year
+#output and purpose: create a table of the top rap songs from that year
+urlfunctionHipHop <- function(year) {
+  if (year >= 2007 && year <= 2023) {
+      HipHop_url <- paste0("https://en.wikipedia.org/wiki/List_of_number-one_R%26B/hip-hop_songs_of_", year, "_(U.S.)")
+      #specific url for years 2007-2023
+      html <- read_html(HipHop_url)
+      cast <- html_nodes(html, "th , .plainrowheaders td")
+      html_text(cast, trim = TRUE) 
+      tables <- html_table(html, fill = TRUE, header = TRUE)
+      #accessing the desired table
+      if (year == 2012) {
+        #the table containing the artist and song title from the website differed for the year 2012
+        desired_table <- tables[[1]]
+      }else{
+        desired_table <- tables[[2]]
+      }
+      desired_table <- desired_table[, -1]
+        #taking out an unnecessary first column
+  }else {
+      #specific url for every year before 2007
+      HipHop_url <- paste0("https://en.wikipedia.org/wiki/", year, "_in_hip_hop_music")
+      html <- read_html(HipHop_url)
+      cast <- html_nodes(html, ".headerSort , .jquery-tablesorter td, .headerSort") 
+      html_text(cast, trim = TRUE) 
+      tables <- html_table(html, fill = TRUE, header = TRUE)
+      #accessing the desired table
+      if (year == 2000 || year >= 2002) {
+        #the table containing the artist and song title from the website differed for years 2000 and from 2002-2006
+        desired_table <- tables[[5]]
+      }else{
+        desired_table <- tables[[6]]
+      }
+  }
+  colnames(desired_table) <- c("Title", "Artist")
+    #name columns
+  desired_table$Year <- year
+     #add columns for year
+  desired_table$genre <- "Hip Hop" 
+     #add column for genre
+  desired_table <- unique(desired_table)
+     #take out repeated rows
+  return(desired_table)
+}
+
+
+```
+
 ```{r, eval=FALSE, echo=FALSE}
 # Purpose: This function scrapes lyrics from songlyrics.com for the billboard top 100 country songs 
 # Input: Our songs data frame
@@ -137,7 +184,7 @@ head(TopCountry)
 
 
 ```{r, eval=FALSE, echo=FALSE}
->>>>>>> a49c5c644420c9914323b250f7f2ed3803f4d6ce
+
 #input: a year
 #output and purpose: create a table of the top rap songs from that year
 urlfunctionHipHop <- function(year) {
