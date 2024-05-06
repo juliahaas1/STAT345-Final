@@ -80,91 +80,10 @@ urlfunction <- function(year) {
   return(desired_table)
       
 }
-TopSongs <- rbindlist(lapply(1958:2023, urlfunction), fill = TRUE)
-
-clean_data <- function(dataset) {
-    #input: a data set
-    #output and purpose: clean up the data set for creating urls in the 
-    # Remove quotation marks from the Title column and puts it into a format that is easily inputted into urls
-    dataset$Title <- gsub('"', '', dataset$Title)
-    # Replace spaces with hyphens in all columns for URL purposes
-    dataset <- lapply(dataset, function(x) gsub(" ", "-", x))
-    # Convert the modified dataset to a data frame
-    dataset <- as.data.frame(dataset)
-    # Remove hyphens at the end of Title column
-    dataset$Title <- sub("-$", "", dataset$Title)
-    # Remove special characters from the Title column
-    dataset$Title <- gsub("[,.?%()]", "", dataset$Title)
-    # Remove periods and apostrophes from the Artist column
-    dataset$Artist <- gsub("[.']", "", dataset$Artist)
-    # Remove "-and" from the end of Artist names
-    dataset$Artist <- sub("-and", "", dataset$Artist)
-    # Return the cleaned dataset
-    return(dataset)
-}
-
-# Clean the TopSongs dataset using the clean_data function
-TopSongs2 <- clean_data(TopSongs)
-
 ```
 
-
-```{r, warning=FALSE}
-# Purpose: This function scrapes lyrics from songlyrics.com for the billboard top 100 country songs 
-# Input: Our songs data frame
-# Output: A new column in the songs data frame with lyrics for every song
-scrape_lyrics <- function(df) {
-  lyrics <- character(nrow(df))  
-  for (i in 1:nrow(df)) {
-    url <- paste0("https://www.songlyrics.com/", df$Artist[i], "/", df$Title[i], "-lyrics/")
-    # Tests for errors when getting URLs and makes sure code keeps running after an error occurs
-    tryCatch({
-      html <- read_html(url)
-      raw_lyrics <- html_nodes(html, "#songLyricsDiv") %>% html_text() %>% as.character()
-      lyrics[i] <- paste(raw_lyrics, collapse = " ")
-    }, error = function(e) {
-    })
-  }
-  df$lyrics <- lyrics  
-  return(df)
-}
-# Apply function to our data frame
-TopSongs3 <- scrape_lyrics(TopSongs2)
-```
-
-```{r, warning=FALSE}
-clean_dataLyrics <- function(dataset) {
-    # Remove slash and everything behind it in the Title column
-    dataset$Title <- gsub("/.*", "", dataset$Title)
-    # Remove quotation marks from the Title column
-    dataset$Title <- gsub('"', '', dataset$Title)
-    # Replace spaces with hyphens in all columns for URL purposes
-    dataset <- lapply(dataset, function(x) gsub(" ", "-", x))
-    # Convert the modified dataset to a data frame
-    dataset <- as.data.frame(dataset)
-    # Remove hyphens at the end of Title column
-    dataset$Title <- sub("-$", "", dataset$Title)
-    # Remove special characters from the Title column
-    dataset$Title <- gsub("[,.?%()]", "", dataset$Title)
-    # Remove periods and apostrophes from the Artist column
-    dataset$Artist <- gsub("[.']", "", dataset$Artist)
-    # Remove "-and" from the end of Artist names
-    dataset$Artist <- sub("-and", "", dataset$Artist)
-    # Return the cleaned dataset
-    return(dataset)
-}
-TopSongs3 <- clean_dataLyrics(TopSongs3)
-#save it as a csv file to working directory
-write.csv(TopSongs3, "TopCountry.csv", row.names = FALSE)
-
-#call it to test that it works and reads it correctly
-TopCountry<-read.csv("TopCountry.csv")
-
-
-```
-
-RAP CODE 
-```{r, warning=FALSE}
+## Hip Hop Data
+```{r, warning= FALSE}
 #input: a year
 #output and purpose: create a table of the top rap songs from that year
 urlfunctionHipHop <- function(year) {
@@ -210,10 +129,104 @@ urlfunctionHipHop <- function(year) {
   return(desired_table)
 }
 
+```
+
+## function to clean up data frames without lyrics into a nice format
+```{r}
+clean_data <- function(dataset) {
+    #input: a data set
+    #output and purpose: clean up the data set for creating urls in the 
+    #Remove quotation marks from the Title column and puts it into a format that is easily inputted into urls
+    dataset$Title<-gsub("/.*", "", dataset$Title)
+    dataset$Title<-gsub('"', '', dataset$Title)  
+    dataset$Title <- gsub('"', '', dataset$Title)
+    # Replace spaces with hyphens in all columns for URL purposes
+    dataset <- lapply(dataset, function(x) gsub(" ", "-", x))
+    # Convert the modified dataset to a data frame
+    dataset <- as.data.frame(dataset)
+    # Remove hyphens at the end of Title column
+    dataset$Title <- sub("-$", "", dataset$Title)
+    # Remove special characters from the Title column
+    dataset$Title <- gsub("[,.?%()]", "", dataset$Title)
+    # Remove periods and apostrophes from the Artist column
+    dataset$Artist <- gsub("[.']", "", dataset$Artist)
+    # Remove "-and" from the end of Artist names
+    dataset$Artist <- sub("-and", "", dataset$Artist)
+    dataset <- unique(dataset)
+    # Return the cleaned dataset
+    return(dataset)
+}
+
+# Clean the TopSongs dataset using the clean_data function
+TopSongs2 <- clean_data(TopSongs)
+
+```
+
+##function to add lyrics into the data frame
+```{r, warning=FALSE}
+# Purpose: This function scrapes lyrics from songlyrics.com for the billboard top 100 country songs 
+# Input: Our songs data frame
+# Output: A new column in the songs data frame with lyrics for every song
+scrape_lyrics <- function(df) {
+  lyrics <- character(nrow(df))  
+  for (i in 1:nrow(df)) {
+    url <- paste0("https://www.songlyrics.com/", df$Artist[i], "/", df$Title[i], "-lyrics/")
+    # Tests for errors when getting URLs and makes sure code keeps running after an error occurs
+    tryCatch({
+      html <- read_html(url)
+      raw_lyrics <- html_nodes(html, "#songLyricsDiv") %>% html_text() %>% as.character()
+      lyrics[i] <- paste(raw_lyrics, collapse = " ")
+    }, error = function(e) {
+    })
+  }
+  df$lyrics <- lyrics  
+  return(df)
+}
+# Apply function to our data frame
+TopSongs3 <- scrape_lyrics(TopSongs2)
+```
+
+## function to clean lyrics to make into a neat format
+```{r, warning=FALSE}
+clean_dataLyrics <- function(dataset) {
+    # Remove slash and everything behind it in the Title column
+    dataset$Title <- gsub("/.*", "", dataset$Title)
+    # Remove quotation marks from the Title column
+    dataset$Title <- gsub('"', '', dataset$Title)
+    # Replace spaces with hyphens in all columns for URL purposes
+    dataset <- lapply(dataset, function(x) gsub(" ", "-", x))
+    # Convert the modified dataset to a data frame
+    dataset <- as.data.frame(dataset)
+    # Remove hyphens at the end of Title column
+    dataset$Title <- sub("-$", "", dataset$Title)
+    # Remove special characters from the Title column
+    dataset$Title <- gsub("[,.?%()]", "", dataset$Title)
+    # Remove periods and apostrophes from the Artist column
+    dataset$Artist <- gsub("[.']", "", dataset$Artist)
+    # Remove "-and" from the end of Artist names
+    dataset$Artist <- sub("-and", "", dataset$Artist)
+    # Return the cleaned dataset
+    return(dataset)
+}
+TopSongs3 <- clean_dataLyrics(TopSongs3)
+#save it as a csv file to working directory
+write.csv(TopSongs3, "TopCountry.csv", row.names = FALSE)
+
+#call it to test that it works and reads it correctly
+TopCountry<-read.csv("TopCountry.csv")
+
+
+```
+
+## Creating data frames with lyrics for hip hop and country
+```{r, warning=FALSE}
+TopSongs <- rbindlist(lapply(1958:2023, urlfunction), fill = TRUE)
+   ##Creating a dataframe including genre, year, title, artist for 1958 to 2023
 TopHipHopSongs <- rbindlist(lapply(1986:2023, urlfunctionHipHop), fill = TRUE)
+  TopHipHopSongs <- TopHipHopSongs[,c(1,2,5,6), drop = FALSE]
   #run the function to find tables and put them together from years 1986 to 2023
   #we picked 1987 because this was the first year that there was top hip hop songs in Wikipedia
-TopHipHopSongs <- TopHipHopSongs[,c(1,2,5,6), drop = FALSE]
+
   #only including , artist, year,  and genre
 TopHipHopSongs <- unique(TopHipHopSongs)
   #deleting repeat columns
