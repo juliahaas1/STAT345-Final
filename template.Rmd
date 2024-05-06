@@ -31,7 +31,7 @@ To start the process of analyzing song lyrics, we first created a data frame wit
 
 
 ## Country Data
-```{r, warning=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 
 #Sophies#####
 #Use URLs to get song titles, artists, and dates
@@ -107,7 +107,7 @@ TopSongs2 <- clean_data(TopSongs)
 ```
 
 
-```{r, warning=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 # Purpose: This function scrapes lyrics from songlyrics.com for the billboard top 100 country songs 
 # Input: Our songs data frame
 # Output: A new column in the songs data frame with lyrics for every song
@@ -130,7 +130,7 @@ scrape_lyrics <- function(df) {
 TopSongs3 <- scrape_lyrics(TopSongs2)
 ```
 
-```{r, warning=FALSE}
+```{r,eval=FALSE, echo=FALSE}
 clean_dataLyrics <- function(dataset) {
     # Remove slash and everything behind it in the Title column
     dataset$Title <- gsub("/.*", "", dataset$Title)
@@ -154,15 +154,16 @@ clean_dataLyrics <- function(dataset) {
 TopSongs3 <- clean_dataLyrics(TopSongs3)
 #save it as a csv file to working directory
 write.csv(TopSongs3, "TopCountry.csv", row.names = FALSE)
+```
 
+```{r, echo=FALSE}
 #call it to test that it works and reads it correctly
 TopCountry<-read.csv("TopCountry.csv")
-
-
+head(TopCountry)
 ```
 
 
-```{r, warning=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 #input: a year
 #output and purpose: create a table of the top rap songs from that year
 urlfunctionHipHop <- function(year) {
@@ -220,12 +221,17 @@ LyricsHipHopSongs <- scrape_lyrics(DFTopHipHopSongs)
 LyricsHipHopSongs <- clean_data(LyricsHipHopSongs)
 
 write.csv(LyricsHipHopSongs, "TopHipHopSongs.csv", row.names = FALSE)
+```
+
+```{r, echo=FALSE}
+
 TopHipHopSongsCSV <-read.csv("TopHipHopSongs.csv")
+head(TopHipHopSongsCSV)
 ```
 
 
 ## Measure of Repetitiveness: Unqiue Words Ratio
-```{r, warning=FALSE}
+```{r, warning=FALSE, echo=FALSE}
 # UNIQUE RATIO FUNCTION WITH GRAPH
 # Purpose: To generate a ratio of unique words to total words within song lyrics for each year included in the data frame and create a ggplot of the resulting data.
 # The function inputs: The input of this function is a data frame, which must have columns with "year" and "lyrics". It also take in graph_title which allows you to specifically name your graph.
@@ -283,7 +289,7 @@ When looking at the Top Country data we see a high unique word ratio in the earl
 In the Hip Hop graph, we cannot see a clear trend regarding the ratio of the unique words. This could be because we have a smaller sample size of Hip Hop songs compared to Country songs. We only have data from 1987 to 2023, but there are a lot fewer songs within each year. From the data we do have there seems to be a lot of variation from year to year, this could be due to how Hip Hop has evolved and was a newer genre in the 1980s. Towards the 2000's we collected a lot more data and the unique ratio is trending upwards, meaning the songs are becoming less repetitive. This could explained by how Hip Hop music has become a broader genre, and there are a lot more artists entering the genre as well.
 
 ## Measure of Repetitiveness: Title Repetition
-```{r, warning=FALSE}
+```{r, warning=FALSE, echo=FALSE}
 # TITLE REPETITION FUNCTION WITH GRAPH INCLUDED
 # Purpose: To find the number of times a song repeats its title within its own lyrics. Then add the frequency of repeats to the inputted data frame. Lastly it will provide a graph of average title repeats over time with a linear regression model to see if there is a linear relationship.
 # The function inputs: The input of this function is a data frame, which must have columns with "Title", "Year", and "lyrics".
@@ -346,12 +352,12 @@ When comparing the two genres, we do have to keep in mind the fact that our coll
 
 
 ## Sophie
-```{r, warning=FALSE}
+```{r, warning=FALSE, echo=FALSE}
 alcohol <- c("whiskey", "moonshine", "beer", "wine", "tequila", "vodka", "jack daniels", "budlight", "coorslight", "busch", "alcohol", "rum", "gin", "brandy", "cognac", "schnapps", "absinthe", "champagne", "sake")
 intimacy <- c("sexy", "hot", "sex", "attractive", "baby", "babe", "lover", "sweetheart", "passion", "desire", "romance", "affection", "intimacy", "seductive", "lust")
 family <- c("mom", "mama", "granny", "marriage", "children", "marry", "wife", "husband", "dogs", "father", "daddy", "grandpa", "grandmother", "aunt", "uncle", "cousin", "siblings", "in-laws", "offspring")
 drugs <- c("coke", "cocaine", "tabacco", "weed", "heroin", "methamphetamine", "LSD", "ecstasy", "prescription drugs", "opioids", "hallucinogens", "MDMA", "smoke", "smoking")
-guns <- c("gun", "guns", "revolver", "shotgun", "rifle", "pistol", "firearm", "ammunition", "sniper", "handgun", "arsenal")
+guns <- c("gun", "guns", "revolver", "shotgun", "rifle", "pistol", "firearm", "ammunition", "sniper", "handgun", "arsenal", "glock")
 music <- c("melody", "rhythm", "harmony", "lyrics", "genre", "beat", "album", "artist", "band", "guitar")
 sad <- c("heartbreak", "sorrow", "grief", "despair", "melancholy", "misery", "anguish", "heartache", "depression", "tears")
 countylivin <- c("cowboy", "horse", "truck", "pickup", "road", "tea", "tractor", "barn", "ranch", "cattle", "hay", "pasture", "cowboy boots", "western", "yeehaw", "rodeo")
@@ -375,7 +381,7 @@ violence <- c("violence", "fight", "attack", "assault", "battle", "war", "weapon
 # Input:
 # Output:
 ThemeGraph <- function(TopGenre, graph_title) {
-# Loop through each row of the lyrics column in Topsongs2
+# Loop through each row of the lyrics column in TopGenre
 for (lyric in TopGenre$lyrics) {
   # Check if any word from each vector is present in the lyrics
   if (any(grepl(paste(alcohol, collapse = "|"), lyric, ignore.case = TRUE))) {
@@ -433,17 +439,21 @@ ggplot(total_counts, aes(x = vector, y = proportion)) +
         plot.title = element_text(hjust = 0.5))
 }
 
-ThemeGraph(TopRapSongsCSV, "Proportions of Themes Found in Rap Songs")
+ThemeGraph(TopRapSongsCSV, "Proportions of Themes Found in Hip Hop Songs")
 ThemeGraph(TopCountry, "Proportions of Themes Found in Country Songs")
 ```
 
-For our final analysis, we wanted to explore themes within song lyrics by tracking repetitiveness of certain words. Both Country music and Hip Hop have common stereotypes, and we wanted to see if these stereotypes are as apparent as they are thought to be. The themes that we looked for include words or short phrases relating to "Alcohol", "Intimacy", "Family", "Drugs", "Guns", "Music", "Sad", "Country Living", "Town", "Swear", and "Violence". 
+For our final analysis, we wanted to explore themes within song lyrics by tracking repetitiveness of certain words. Both Country music and Hip Hop have common stereotypes, and we wanted to see if these stereotypes are as apparent as they are thought to be. The themes that we looked for include words or short phrases relating to "Alcohol", "Intimacy", "Family", "Drugs", "Guns", "Music", "Sad", "Country Living", "Town", "Swear", and "Violence". We chose these themes and words that we might think belong in them, so this analysis may be lacking certain words or phrases that others might think to include. Because of this these plots may not fully depict all possible themes or trends within them.
 
-When looking at the bar graph for Country, we can see that words relating to Alcohol, Country Living, Intimacy, and Violence seem to be the most repetitive. The themes of Drugs and Guns are very low, and Family, Music, Sad, Swear, and Town are all pretty moderate trends.
+When looking at the bar graph for Country, we can see that words relating to Alcohol, Country Living, Intimacy, and Violence seem to be the most repetitive. The themes of Drugs and Guns are very low, and Family, Music, Sad, Swear, and Town are all pretty moderate trends. 
 
 When looking at the bar graph for Hip Hop, we can see that Intimacy, Swearing, and Violence are the most repetitive. Alcohol, Country Living, Drugs, Guns, and Town themes are all pretty moderately apparent, and the theme Sad appears the least according to our data collection. 
 
-Words relating to Drugs and Guns appears more frequently in Hip Hop than Country music, which is something that many people might be able to guess, although their differences are not as drastic as some might think. One interesting observation is that for both Country music and Hip Hop, Violence seems to be the most repeated theme. 
+Words relating to Drugs and Guns appear more frequently in Hip Hop than Country music, which is something that many people might have suspected, although their differences are not as drastic as some might think. One interesting observation is that for both Country music and Hip Hop, Violence seems to be the most repeated theme. Another is that in Country, the theme country living would be the most common theme many people would use to describe country music, and words of that theme are very present in the lyrics we have collected. For Hip Hop, many stereotypes for the genre would be relating to swearing, violence, sex, drugs, and guns and these are themes that are notible in our collection, but an interesting observation is that themes relating to Family appear more than drugs or guns. 
+
+When looking at the two plots we can see that for both Country and Hip Hop, there are certain themes that fit "stereo-typically" with the different genres that confirm these trends, although there are some surprising themes for both Country and Hip Hop found. Overall, I think that it is important not to oversimplify one genre based off of stereotypes that one might see.
+
+
 
 
 
