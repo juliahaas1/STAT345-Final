@@ -203,11 +203,11 @@ clean_dataLyrics <- function(dataset) {
 ## Creating data frames with lyrics for hip hop and country
 ```{r, warning=FALSE}
 TopCountrySongs <- rbindlist(lapply(1958:2023, urlfunction), fill = TRUE)
-   ##Creating a dataframe including genre, year, title, artist for 1958 to 2023
+   #Creating a dataframe including genre, year, title, artist for 1958 to 2023
 TopHipHopSongs <- rbindlist(lapply(1986:2023, urlfunctionHipHop), fill = TRUE)
   TopHipHopSongs <- TopHipHopSongs[,c(1,2,5,6), drop = FALSE]
   #run the function to find tables and put them together from years 1986 to 2023
-  #we picked 1987 because this was the first year that there was top hip hop songs in Wikipedia
+  #we picked 1986 because this was the first year that there was top hip hop songs in Wikipedia
 DFTopCountrySongs <- clean_data(TopCountrySongs)
 DFTopHipHopSongs <- clean_data(TopHipHopSongs)
 
@@ -216,13 +216,14 @@ LyricsCountrySongs2 <- clean_dataLyrics(LyricsCountrySongs1)
 LyricsHipHopSongs1 <- scrape_lyrics(DFTopHipHopSongs)
 LyricsHipHopSongs2 <- clean_dataLyrics(LyricsHipHopSongs1)
 
+```
+
+#reading into CSVs
+```{r,warning=false, echo=FALSE}
 #save it as a csv file to working directory
 
 write.csv(LyricsCountrySongs2, "TopCountry.csv", row.names = FALSE)
 write.csv(LyricsHipHopSongs2, "TopHipHopSongs.csv", row.names = FALSE)
-```
-
-```{r,warning=false, echo=FALSE}
 #call it to test that it works and reads it correctly
 TopCountry<-read.csv("TopCountry.csv")
 head(TopCountry)
