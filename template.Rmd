@@ -7,7 +7,6 @@ output:
     df_print: paged
 ---
 
-
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(rvest)
@@ -19,7 +18,6 @@ library(ggplot2)
 library(data.table)
 ```
 
-
 For this project, our goal was to gather song data, and then analyze the song lyrics for repetitiveness in various ways. 
 •	To start, we scraped Billboard Top 100 song data off of Wikipedia, and created a data frame with some basic information about each song.
 •	We then used the data frame of songs to write a function to gather corresponding lyrics from the lyric hosting website www.songlyrics.com.
@@ -27,8 +25,6 @@ For this project, our goal was to gather song data, and then analyze the song ly
 
 
 To start the process of analyzing song lyrics, we first created a data frame with the Billboard Top Country songs starting from 1958 when the Billboard charts were first introduced. We included the top song titles and their corresponding artist, year, and genre. We then used this data frame to get lyrics for each song by scraping a song lyrics website. We also had to modify the title and artist names to best match the URL’s for the lyrics website, in order to maximize the number of songs we could get lyrics for. 
-
-
 
 ## Country Data
 ```{r, eval=FALSE, echo=FALSE}
@@ -105,7 +101,6 @@ clean_data <- function(dataset) {
 TopSongs2 <- clean_data(TopSongs)
 
 ```
-
 
 ```{r, eval=FALSE, echo=FALSE}
 # Purpose: This function scrapes lyrics from songlyrics.com for the billboard top 100 country songs 
@@ -223,7 +218,7 @@ LyricsHipHopSongs <- clean_data(LyricsHipHopSongs)
 write.csv(LyricsHipHopSongs, "TopHipHopSongs.csv", row.names = FALSE)
 ```
 
-```{r, echo=FALSE}
+```{r,warning=false, echo=FALSE}
 
 TopHipHopSongsCSV <-read.csv("TopHipHopSongs.csv")
 head(TopHipHopSongsCSV)
@@ -348,7 +343,7 @@ For Hip Hop, we have data that can be visualized from 1987 to 2023. Interestingl
 
 Why are song titles being repeated more in Country and less in Hip Hop over time? One inference could be that country artists want to include the title of their songs in their music to enhance the listeners recall and remembrance of the song. Since the 1960s, the way musicians earn profit has changed, and artists may be focusing more on streams instead of selling records and cds. Another could be that over time the genre has shifted into more of a pop culture which is generally more repetitive. For Hip Hop, one inference could be that Hip Hop has grown in popularity over time and because of this, the genre has expanded in many ways. Hip Hop has developed into many sub genres and has become more diverse. 
 
-When comparing the two genres, we do have to keep in mind the fact that our collected country data has a sample size of 1460 that stretches over 61 years, while the Hip Hop genre has a sample size of 305, and only stretches 36 years of observation. Because our data for the country genre holds a larger sample size, we can see more of an accurate representation of trends within the genre. The sample size for Hip Hop is a lot smaller, and so our figures may not fully represent the genre.
+When comparing the two genres, we do have to keep in mind the fact that our collected country data has a sample size of 1460 that stretches over 61 years, while the Hip Hop genre has a sample size of 305, and only stretches 37 years of observation. Because our data for the country genre holds a larger sample size, we can see more of an accurate representation of trends within the genre. The sample size for Hip Hop is a lot smaller, and so our figures may not fully represent the genre.
 
 
 ## Sophie
@@ -452,9 +447,4 @@ When looking at the bar graph for Hip Hop, we can see that Intimacy, Swearing, a
 Words relating to Drugs and Guns appear more frequently in Hip Hop than Country music, which is something that many people might have suspected, although their differences are not as drastic as some might think. One interesting observation is that for both Country music and Hip Hop, Violence seems to be the most repeated theme. Another is that in Country, the theme country living would be the most common theme many people would use to describe country music, and words of that theme are very present in the lyrics we have collected. For Hip Hop, many stereotypes for the genre would be relating to swearing, violence, sex, drugs, and guns and these are themes that are notible in our collection, but an interesting observation is that themes relating to Family appear more than drugs or guns. 
 
 When looking at the two plots we can see that for both Country and Hip Hop, there are certain themes that fit "stereo-typically" with the different genres that confirm these trends, although there are some surprising themes for both Country and Hip Hop found. Overall, I think that it is important not to oversimplify one genre based off of stereotypes that one might see.
-
-
-
-
-
   
