@@ -184,6 +184,7 @@ scrape_lyrics <- function(df) {
 #input: data set with song title and artist
 #output and purpose: make the data set neater and easily usable for repetition testing
 clean_dataLyrics <- function(dataset) {
+    dataset <- na.omit(dataset)
     dataset$lyrics <- gsub("\n", " ", dataset$lyrics)
     dataset$lyrics <- gsub("[,.()]", "", dataset$lyrics)
     dataset$lyrics <- tolower(dataset$lyrics)
@@ -195,6 +196,8 @@ clean_dataLyrics <- function(dataset) {
     dataset <- lapply(dataset, function(x) gsub("-", " ", x))
     # Remove rows with missing lyrics
     dataset <- as.data.frame(dataset)
+    dataset$Title <- gsub("†", "", dataset$Title)
+    dataset$Title <- gsub(' " ', "", dataset$Title)
     return(dataset)
 }
 ```
@@ -215,7 +218,7 @@ LyricsCountrySongs1 <- scrape_lyrics(DFTopCountrySongs)
 LyricsCountrySongs2 <- clean_dataLyrics(LyricsCountrySongs1)
 LyricsHipHopSongs1 <- scrape_lyrics(DFTopHipHopSongs)
 LyricsHipHopSongs2 <- clean_dataLyrics(LyricsHipHopSongs1)
- 
+
 ```
 
 #reading into CSVs
@@ -230,6 +233,7 @@ head(TopCountry)
 
 TopHipHopSongsCSV <-read.csv("TopHipHopSongs.csv")
 head(TopHipHopSongsCSV)
+
 ```
 
 
