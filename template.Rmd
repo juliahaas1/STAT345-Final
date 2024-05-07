@@ -18,16 +18,29 @@ library(ggplot2)
 library(data.table)
 ```
 
-For this project, our goal was to gather song data, and then analyze the song lyrics for repetitiveness in various ways. 
-•	To start, we scraped Billboard Top 100 song data off of Wikipedia, and created a data frame with some basic information about each song.
-•	We then used the data frame of songs to write a function to gather corresponding lyrics from the lyric hosting website www.songlyrics.com.
-•	Once we had our cleaned up data frame of song information, we were then able to create functions to measure receptiveness and show them through multiple graphical visuals. 
+
+### For this project, our goal was to gather song data, and then analyze the song lyrics for repetitiveness in various ways. <br>
+•	To start, we scraped Billboard Top 100 song data off of Wikipedia and created a data frame with some basic information about each song. <br>
+•	We then used the data frame of songs to write a function to gather corresponding lyrics from the lyric hosting website www.songlyrics.com. <br>
+•	Once we had our cleaned-up data frame of song information, we were then able to create functions to measure receptiveness and show them through multiple graphical visuals. <br>
 
 
-To start the process of analyzing song lyrics, we first created a data frame with the Billboard Top Country songs starting from 1958 when the Billboard charts were first introduced. We included the top song titles and their corresponding artist, year, and genre. We then used this data frame to get lyrics for each song by scraping a song lyrics website. We also had to modify the title and artist names to best match the URL’s for the lyrics website, in order to maximize the number of songs we could get lyrics for. 
+### Justifications of choices: <br>
+•	We picked Wikipedia for our top songs data frame without lyrics because we could gather songs easily and compare them across years <br>
+•	We used as many years as Wikipedia had available for Country which was from 1958 to 2023 and for Hip Hop which was from 1986 to 2023 <br>
+•	During the lyric scraping process, our goal was to maximize the number of songs we could access lyrics for. <br>
+•	The suggested lyric hosting website www.songlyrics.com had the simplest URL to create a function to scrape the lyrics. <br>
+•	We manipulated the song titles and artists to match the URL format. <br>
+• Some lyrics could not be scraped because they were not up to date or the website did not contain the song's lyrics. <br>
+•	Because the website was not up to date we were unable to collect Country song's lyrics for 2019-2023 and we decided this was acceptable because we had so many songs from other years. <br>
+•	After creating the data frames we chose to visualize song repetition by analyzing unique words and title repetitions over time. In both measures of repetitiveness, we looked at averages per year. Through averages, we were able to see stronger trends and repetition patterns. <br>
+• We chose unique word ratio because we wanted to find the repetitiveness of singular words within the lyrics, and we wanted to see how many words stood out. <br>
+• For titles we chose to look at how often the titles repeated and if we could see a trend or if it has always been consistent. <br>
+• We compared this between genres and if it is a common thing artists do in general <br>
+• In the title repetition measurement, we incorporated linear models and r-squared statistics to further investigate patterns. <br>
 
+```{r, echo=FALSE}
 ## Country Data
-```{r, eval=FALSE, echo=FALSE}
 ## input: a year
 ##output and purpose: creating a data frame of the top country songs from that year from wikipedia urls
 urlfunction <- function(year) {
@@ -75,9 +88,9 @@ urlfunction <- function(year) {
 }
 ```
 
-## Hip Hop Data
-```{r, warning= FALSE}
 
+```{r, echo=FALSE, warning= FALSE}
+## Hip Hop Data
 #input: a year
 #output and purpose: create a table of the top rap songs from that year from wikipedia urls
 urlfunctionHipHop <- function(year) {
@@ -126,8 +139,9 @@ urlfunctionHipHop <- function(year) {
 
 ```
 
+
+```{r, echo=FALSE}
 ## function to clean up data frames without lyrics into a nice format
-```{r}
 clean_data <- function(dataset) {
     #input: a data set
     #output and purpose: clean up the data set for creating urls in the 
@@ -156,8 +170,9 @@ clean_data <- function(dataset) {
 
 ```
 
+
+```{r, echo=FALSE}
 ## Function to add the lyrics to data frame
-```{r, eval=FALSE, echo=FALSE}
 # Purpose: This function scrapes lyrics from songlyrics.com for the billboard top 100 country songs 
 # Input: Our songs data frame
 # Output: A new column in the songs data frame with lyrics for every song
@@ -179,8 +194,9 @@ scrape_lyrics <- function(df) {
 ```
 
 
+
+```{r, echo=FALSE}
 ## function to clean lyrics to make into a neat format
-```{r,eval=FALSE, echo=FALSE}
 #input: data set with song title and artist
 #output and purpose: make the data set neater and easily usable for repetition testing
 clean_dataLyrics <- function(dataset) {
@@ -203,8 +219,9 @@ clean_dataLyrics <- function(dataset) {
 ```
 
 
+
+```{r, eval=FALSE, echo=FALSE}
 ## Creating data frames with lyrics for hip hop and country
-```{r, warning=FALSE}
 TopCountrySongs <- rbindlist(lapply(1958:2023, urlfunction), fill = TRUE)
    #Creating a dataframe including genre, year, title, artist for 1958 to 2023
 TopHipHopSongs <- rbindlist(lapply(1986:2023, urlfunctionHipHop), fill = TRUE)
@@ -221,12 +238,17 @@ LyricsHipHopSongs2 <- clean_dataLyrics(LyricsHipHopSongs1)
 
 ```
 
+
+```{r,warning=FALSE,eval=FALSE, echo=FALSE}
 #reading into CSVs
-```{r,warning=false, echo=FALSE}
 #save it as a csv file to working directory
 
 write.csv(LyricsCountrySongs2, "TopCountry.csv", row.names = FALSE)
 write.csv(LyricsHipHopSongs2, "TopHipHopSongs.csv", row.names = FALSE)
+
+```
+
+```{r, echo=FALSE}
 #call it to test that it works and reads it correctly
 TopCountry<-read.csv("TopCountry.csv")
 head(TopCountry)
@@ -284,16 +306,15 @@ return(unique_ratio_graph_by_year)
 }
 
 Country_Unique_Ratio_Graph <-generate_unique_ratios_graph(TopCountry, "Unique Words Ratio of Top Country Songs Over Time")
-Country_Unique_Ratio_Graph
 HipHop_Unique_Ratio_Graph <-generate_unique_ratios_graph(TopHipHopSongsCSV, "Unique Words Ratio of Top Hip Hop Songs Over Time")
-HipHop_Unique_Ratio_Graph
+
 
 ```
-The unique words graph creates a line graph of the average ratio of unique words for each year in the inputted data set. The graph also includes a blue line which represents the overall unique word ratio from all the years. By including this blue line we can reference when the ratio is above and below average. The unique word ratio represents how much diversity the words have within the lyrics. A low unique word ratio suggests a higher level of repetitiveness within the lyrics.
+The unique words graph creates a line graph of the average ratio of unique words for each year in the inputted data set. The graph also includes a blue line which represents the overall unique word ratio from all the years. By including this blue line, we can reference when the ratio is above and below average. The unique word ratio represents how much diversity the words have within the lyrics. A low unique word ratio suggests a higher level of repetitiveness within the lyrics.
 
-When looking at the Top Country data we see a high unique word ratio in the earlier years, especially around 1960 it peaks. A high ratio indicates that there are more unique words compared to overall words. Then the graph follows a downward trend and bottoms out around the mid to end 1980s. During this period we see the most repetitive lyrics and this could be due to the artists who have top songs. For example, where we see this low unique word ratio in the mid to late 1980s there are lots of songs by the band Alabama. Then we continue to see a low ratio in the 1990s and part of this could be because the artist Alan Jackson has multiple top songs within those years. Towards the end of the data we see the ratio trend back upwards and this could be because Country music has been changing a lot and becoming more pop-like. Another reason could be that there are more artists with top songs throughout the more recent years.
+When looking at the Top Country data we see a high unique word ratio in the earlier years, especially around 1960 it peaks. A high ratio indicates that there are more unique words compared to overall words. Then the graph follows a downward trend and bottoms out around the mid to end 1980s. During this period, we see the most repetitive lyrics, and this could be due to the artists who have top songs. For example, where we see this low unique word ratio there are lots of songs by the band Alabama. Then we continue to see a low ratio in the 1990s and part of this could be because the artist Alan Jackson has multiple top songs within those years. Towards the end of the data, we see the ratio trend back upwards and this could be because Country music has been changing a lot and becoming more pop-like. Another reason could be that there are more artists with top songs throughout the more recent years.
 
-In the Hip Hop graph, we cannot see a clear trend regarding the ratio of the unique words. This could be because we have a smaller sample size of Hip Hop songs compared to Country songs. We only have data from 1987 to 2023, but there are a lot fewer songs within each year. From the data we do have there seems to be a lot of variation from year to year, this could be due to how Hip Hop has evolved and was a newer genre in the 1980s. Towards the 2000's we collected a lot more data and the unique ratio is trending upwards, meaning the songs are becoming less repetitive. This could explained by how Hip Hop music has become a broader genre, and there are a lot more artists entering the genre as well.
+In the Hip Hop graph, we can also see the graph following a similar pattern. We see the unique words ratio start of fairly high, when the genre was new. As the years go on, we see the unique words ratio fall and reach its lowest point in the late 2000s. From then the graph trends back upwards and the lyrics become more unique in recent years. This graph is more difficult to see solid trends and has a lot more variability from year to year. This could be because we have a smaller sample size of Hip Hop songs compared to Country songs. We only have data from 1986 to 2023, compared to the country which is from 1958 to 2019. The variation we see from year to year could be due to how Hip Hop has evolved and that fact that it was a newer genre in the 1980s. Towards the 2000's we collected a lot more data and the songs are becoming a lot less repetitive. This could explained by how Hip Hop music has become a broader genre, and there are a lot more artists entering the genre as well.
 
 ## Measure of Repetitiveness: Title Repetition
 ```{r, warning=FALSE, echo=FALSE}
@@ -338,27 +359,25 @@ generate_title_repetition_graph <- function(song_df, graph_title) {
   print(ave_title_repeats)
   
   res2 <- lm(AveTitleRepeats ~ Year, ave_title_repeats_by_year)
-  print(summary(res2))
+  print(paste0("R-squared value for ",graph_title, ": ", summary(res2)$r.squared))
   
 }
 
 Country_Title_Repetition <-generate_title_repetition_graph(TopCountry, "Average Title Repeats of Top Country Over Time")
-Country_Title_Repetition
 HipHop_Title_Repetition <-generate_title_repetition_graph(TopHipHopSongsCSV, "Average Title Repeats of Top Hip Hop Over Time")
-HipHop_Title_Repetition
 
 ```
 
-The figures above represent the average amount of times each title was repeated within its song lyrics per charting year. For country music we have data that can be visualized from 1958 to 2019. When looking at our plot for country, we can see an upward trend within the points, so we can say that over time song titles are increasingly being repeated in lyrics. We decided to fit a linear model to the data, and after observing the summary statistics we can see that the model fits moderately well with an R squared statistic of 0.3169. Time is explaining about 31.7% of the variance in title repetition. 
+The figures above represent the average amount of times each title was repeated within its song lyrics per charting year. For country music we have data that can be visualized from 1958 to 2019. When looking at our plot for country, we can see an upward trend within the points, so we can say that over time song titles are increasingly being repeated in lyrics. We decided to fit a linear model to the data, and after observing the summary statistics we can see that the model fits moderately well with an R squared statistic of 0.2989. Time is explaining about 30% of the variance in title repetition. 
 
-For Hip Hop, we have data that can be visualized from 1987 to 2023. Interestingly enough, we can see a downward trend in the repetition over time. It seems that over time, titles of songs are repeated less on average in lyrics. Unlike country music, a linear model does not fit very well to this model. Time in years can explain about 8.312% of the variance in the data points according to an R-squared statistic of 0.08312. In the figure for Hip Hop, the year 1990 stands out because of its high average repetition. In 1990 the top Hip Hop songs included "Ice Ice Baby" by Vanilla Ice, "Have you Seen her","Pray", and "U Can't Touch This" by MC Hammer, and "Just a Friend" by Biz Markie. The lyrics of these songs are extremely repetitive, which explains why this year has a high average. 
+For Hip Hop, we have data that can be visualized from 1987 to 2023. Interestingly enough, we can see a downward trend in the repetition over time. It seems that over time, titles of songs are repeated less on average in lyrics. Unlike country music, a linear model does not fit very well to this model. Time in years can explain about 2.3% of the variance in the data points according to an R-squared statistic of 0.02371 which is very poor. In the figure for Hip Hop, the year 1990 stands out as an outlier because of its high average repetition. In 1990 the top Hip Hop songs included "Ice Ice Baby" by Vanilla Ice, "Have you Seen her","Pray", and "U Can't Touch This" by MC Hammer, and "Just a Friend" by Biz Markie. The lyrics of these songs are extremely repetitive, which explains why this year has a high average. 
 
 Why are song titles being repeated more in Country and less in Hip Hop over time? One inference could be that country artists want to include the title of their songs in their music to enhance the listeners recall and remembrance of the song. Since the 1960s, the way musicians earn profit has changed, and artists may be focusing more on streams instead of selling records and cds. Another could be that over time the genre has shifted into more of a pop culture which is generally more repetitive. For Hip Hop, one inference could be that Hip Hop has grown in popularity over time and because of this, the genre has expanded in many ways. Hip Hop has developed into many sub genres and has become more diverse. 
 
-When comparing the two genres, we do have to keep in mind the fact that our collected country data has a sample size of 1460 that stretches over 61 years, while the Hip Hop genre has a sample size of 305, and only stretches 37 years of observation. Because our data for the country genre holds a larger sample size, we can see more of an accurate representation of trends within the genre. The sample size for Hip Hop is a lot smaller, and so our figures may not fully represent the genre.
+When comparing the two genres, we do have to keep in mind the fact that our collected country data has a sample size of 1466 that stretches over 61 years, while the Hip Hop genre has a sample size of 394, and only stretches 37 years of observation. Because our data for the country genre holds a larger sample size, we can see more of an accurate representation of trends within the genre. The sample size for Hip Hop is a lot smaller, and so our figures may not fully represent the genre.
 
 
-## Sophie
+## Proportion of Songs Containing Themes Across Genres
 ```{r, warning=FALSE, echo=FALSE}
 alcohol <- c("whiskey", "moonshine", "beer", "wine", "tequila", "vodka", "jack daniels", "budlight", "coorslight", "busch", "alcohol", "rum", "gin", "brandy", "cognac", "schnapps", "absinthe", "champagne", "sake")
 intimacy <- c("sexy", "hot", "sex", "attractive", "baby", "babe", "lover", "sweetheart", "passion", "desire", "romance", "affection", "intimacy", "seductive", "lust")
@@ -384,9 +403,8 @@ violence <- c("violence", "fight", "attack", "assault", "battle", "war", "weapon
   swear_count <- 0
   violence_count <- 0
   
-# Purpose:
-# Input:
-# Output:
+# Input: a data set with columns for lyrics, artist, and Title, and input a title for the graph
+# Output and purpose: create a graph that shows the proportion of songs that contain a word from each theme
 ThemeGraph <- function(TopGenre, graph_title) {
 # Loop through each row of the lyrics column in TopGenre
 for (lyric in TopGenre$lyrics) {
@@ -437,7 +455,7 @@ total_counts$proportion <- total_counts$count / sum(total_counts$count)
 
 # Create a bar chart using ggplot with proportions
 ggplot(total_counts, aes(x = vector, y = proportion)) +
-  geom_bar(stat = "identity") +
+  geom_bar(stat = "identity", fill="skyblue3") +
   labs(title = graph_title,
        x = "Themes",
        y = "Proportion of Songs with Words in Themes") +
