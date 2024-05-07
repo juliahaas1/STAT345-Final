@@ -306,8 +306,9 @@ return(unique_ratio_graph_by_year)
 }
 
 Country_Unique_Ratio_Graph <-generate_unique_ratios_graph(TopCountry, "Unique Words Ratio of Top Country Songs Over Time")
+Country_Unique_Ratio_Graph
 HipHop_Unique_Ratio_Graph <-generate_unique_ratios_graph(TopHipHopSongsCSV, "Unique Words Ratio of Top Hip Hop Songs Over Time")
-
+HipHop_Unique_Ratio_Graph
 
 ```
 The unique words graph creates a line graph of the average ratio of unique words for each year in the inputted data set. The graph also includes a blue line which represents the overall unique word ratio from all the years. By including this blue line, we can reference when the ratio is above and below average. The unique word ratio represents how much diversity the words have within the lyrics. A low unique word ratio suggests a higher level of repetitiveness within the lyrics.
