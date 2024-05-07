@@ -215,7 +215,7 @@ LyricsCountrySongs1 <- scrape_lyrics(DFTopCountrySongs)
 LyricsCountrySongs2 <- clean_dataLyrics(LyricsCountrySongs1)
 LyricsHipHopSongs1 <- scrape_lyrics(DFTopHipHopSongs)
 LyricsHipHopSongs2 <- clean_dataLyrics(LyricsHipHopSongs1)
-
+ 
 ```
 
 #reading into CSVs
